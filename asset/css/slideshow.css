@@ -1,0 +1,71 @@
+@import "slideshow-transition.css";
+
+.slideshow {
+	display: grid;
+	justify-items: center;
+	align-items: center;
+	
+}
+
+.slideshow > * {
+	grid-column-start: 1;
+	grid-row-start: 1;
+}
+
+/* Making slieshow content overlap their background image, else they are side-by-side */
+.slideshow .slide {
+	display: grid;
+	
+	/* Set horizontal alignment of items in, case they have a different width. */
+	/* justify-items: start | end | center | stretch (default); */
+	justify-items: center;
+	
+	/* Set vertical alignment of items, in case they have a different height. */
+	/* align-items: start | end | center | stretch (default); */
+	align-items: center;
+}
+
+.slideshow .slide > * {
+	grid-column-start: 1;
+	grid-row-start: 1;
+}
+
+/* underlining articles header */
+.slideshow article header {
+	display: inline-block;
+	padding-bottom: 5px;
+	position: relative;
+}
+
+.slideshow article header:before{
+	content: "";
+	position: absolute;
+	width: 50%;
+	height: 1px;
+	bottom: 0;
+	left: 25%;
+	border-bottom: 1px solid lightgrey;
+}
+
+
+.slideshow .slide {
+	height: 500px;
+	overflow: hidden;
+}
+
+/* Making article images fill slideshow container without overflowing */
+.slideshow img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.slideshow article {
+	background: rgb(0, 0, 0); /* Fallback color */
+	background: rgba(0, 0, 0, 0.5); /* Black background with 0.5 opacity */
+	color: lightgrey; /* Grey text */
+	padding: 20px; /* Some padding */
+	text-align: center;
+	font-size: 1.3em;
+}
+

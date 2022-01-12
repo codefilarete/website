@@ -1,0 +1,12 @@
+<h2 id="a-word-about-performance">A word about performance</h2>
+<p>Stalactite uses JDBC batch for inserts, updates and deletes. But users have to keep in mind that inserts performance can be corrupted by identifier
+	policy.</p>
+<h3 id="take-caution-to-after-insert-identifier-policy-and-massive-insert">Take caution to after-insert identifier policy and massive insert</h3>
+<p>If you use Stalactite to insert values into a single table then you don&rsquo;t have to worry so much about identifier policy. But if you&rsquo;re
+	using Stalactite much more to help you persist an object graph and expect good performance then you may encouter some trouble if you used
+	after-insert policy.</p>
+<p>JDBC batch is used on PreparedStatement, which then expects to have all its values defined, so in case of relational object, and in particular with
+	one-to-one owned by source entity, it should know target ids before they&rsquo;re persisted to fill owning column, which is impossible with
+	after-insert policy on target entities. As a consequence, in such case, Stalactite should persist target entities before root, and extends this
+	mecanism to the whole graph. As a consequence, to benefit from JDBC batch, after-insert policy needs a different graph iteration algorithm than
+	other policies. It may be possible, but not done yet !</p>

@@ -1,0 +1,40 @@
+<h1 id="persistence-listeners">Persistence listeners</h1>
+<p>Stalactite provides a listener for each persistence action : </p>
+<ul>
+	<li>InsertListener</li>
+	<li>UpdateListener</li>
+	<li>SelectListener</li>
+	<li>DeleteListener</li>
+</ul>
+<p>Each on these classes contains methods to be overriden for handling moments of their dedicated trigger : </p>
+<ul>
+	<li>before</li>
+	<li>after</li>
+	<li>error</li>
+</ul>
+<p>They all can be given to an <code>EntityPersister</code>, which is the result of the <code>entityBuilder(..)...build(..)</code> method, through
+	dedicated <code>addListener(..)</code> methods. Here is an example that manages timestamp of a Car : </p>
+<pre><code class="language-java">EntityPersister&lt;Car, Long&gt; carPersister = entityBuilder(Car.class, Long.class)
+    .add(Car::getId).identifier(afterInsert())
+    .add(Car::getModel)
+    .add(Car::getColor)
+    .embed(Car::getTimestamp, embeddableBuilder(Timestamp.class)
+        .add(Timestamp::getCreationDate)
+        .add(Timestamp::getModificationDate))
+    .build(persistenceContext);
+
+carPersister.addInsertListener(new InsertListener&lt;Car&gt;() {
+    @Override
+    public void beforeInsert(Iterable&lt;? extends Car&gt; entities) {
+        entities.forEach(e -&gt; e.setTimestamp(new Timestamp()));
+    }});
+carPersister.addUpdateListener(new UpdateListener&lt;Car&gt;() {
+    @Override
+    public void beforeUpdate(Iterable&lt;? extends Duo&lt;? extends Car, ? extends Car&gt;&gt; payloads, boolean allColumnsStatement) {
+          payloads.forEach(p -&gt; p.getLeft().getTimestamp().setModificationDate(now()));
+    }});
+</code></pre>
+<section class="hint info">
+<p>Please note that while using ORM module, you’re only able to add listeners to root entity since it’s the only available persister, as a consequence
+	you’ll only be notified with root entities as argument. </p>
+</section>

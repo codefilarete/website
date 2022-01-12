@@ -1,0 +1,103 @@
+@import "normalize.css";
+@import "slideshow.css";
+@import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Licorice&display=swap');
+
+
+body {
+	font-family: Nunito, sans-serif;
+	/*font-family: Calibri, sans-serif;*/
+	font-size: 14px;
+	background-color: gainsboro;
+}
+
+a {
+	text-decoration : none;
+}
+
+ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.header {
+	display: flex;
+	justify-content: space-between;
+}
+
+#site_nav > dl {
+	display: flex;
+	justify-content: right;
+}
+
+#site_nav dt {
+	padding: 0 0.2em 0 0.2em;
+	text-transform: uppercase;
+}
+
+#site_nav dt::first-letter {
+	font-size: 1.3em;
+}
+
+.slideshow {
+	padding-bottom: 50px;
+}
+
+.article-container {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	grid-gap: 40px;
+}
+
+.article-container > article {
+	background-color: #b2b2b2;
+	padding: 10px
+	/*flex-grow: 1;*/
+}
+.article-container > article header {
+	
+	/*color: lightgrey; !* Grey text *!*/
+	padding-bottom: 20px; /* Some padding */
+	/*text-align: center;*/
+	font-size: 2em;
+}
+.article-container > article p {
+	/*color: lightgrey; !* Grey text *!*/
+	/*padding: 20px; !* Some padding *!*/
+	/*text-align: center;*/
+	font-size: 1.3em;
+}
+
+.article-container > article header {
+	display: inline-block;
+	padding-bottom: 5px;
+	position: relative;
+}
+
+.article-container > article header:before{
+	content: "";
+	position: absolute;
+	width: 50%;
+	height: 1px;
+	bottom: 0;
+	/*left: 25%;*/
+	border-bottom: 1px solid dimgray;
+}
+
+.article-container > article em {
+	/*background-color: transparent;*/
+	font-weight: bold;
+	font-style: normal;
+}
+
+footer {
+	text-align: center;
+	font-size: 10px;
+}
+
+@media screen and (orientation: landscape) { /*and (min-width: 900px) {*/
+	body {
+		margin: 0 20% 0 20%;
+	}
+}

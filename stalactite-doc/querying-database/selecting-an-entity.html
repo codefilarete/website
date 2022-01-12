@@ -1,0 +1,31 @@
+<p>Beyond classic possibility to select an entity through its id, Stalactite provides a way to retrieve them through some criteria that match their
+	properties : criteria are targetted through their method reference as they were defined during mapping.</p>
+<section class="hint warn">
+<p>Only properties used by mapping can be used as criteria. If a criteria contains a non-mapped property then an exception will be raised. </p>
+</section>
+<p>Here is a simple example to get all countries whose name starts with &ldquo;F&rdquo;, operators are available in class <code>org.gama.stalactite.query.model.Operators</code>.
+</p>
+<pre><code class="language-java">EntityPersister&lt;Country, Long&gt; persister = entityBuilder(Country.class, Long.class)
+    .add(Country::getId).identifier(afterInsert())
+    .add(Country::getName)
+    .build(persistenceContext);
+    
+List&lt;Country&gt; countries = persister.selectWhere(Country::getName, startsWith(&quot;F&quot;))
+        .execute();
+</code></pre>
+<p>It also worlk with relation, herafter with a one-ton-many :</p>
+<pre><code class="language-java">RelationalEntityPersister&lt;Country, Long&gt; persister = (RelationalEntityPersister) entityBuilder(Country.class, Long.class)
+    .add(Country::getId).identifier(afterInsert())
+    .add(Country::getName)
+    .addOneToManySet(Country::getCities, entityBuilder(City.class, Identifier.class)
+        .add(City::getId).identifier(afterInsert())
+        .add(City::getName))
+        .mappedBy(City::getCountry)
+    .build(persistenceContext);
+    
+List&lt;Country&gt; select = persister.selectWhere(Country::getName, startsWith(&quot;F&quot;))
+        .andMany(Country::getCities, City::getName, eq(&quot;Grenoble&quot;))
+	.execute();
+</code></pre>
+<p>Beware that result returned by <code>entityBuilder(..).build(..)</code> must be casted to <code>RelationalEntityPersister</code> to allow chaining
+	criteria for relations such as <code>andMany(..)</code>.</p>

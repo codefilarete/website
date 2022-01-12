@@ -1,0 +1,107 @@
+<html lang="en-US">
+<head>
+	<title>Code Filarete</title>
+	<meta name="Keywords" content="Java ORM architecture CQRS Hibernate JPA method-reference">
+	<link href="asset/css/home.css" rel="stylesheet"/>
+	<script src="asset/rainbow-custom.min.js"></script>
+	<link rel="stylesheet" href="asset/rainbow-doc.css">
+</head>
+<body>
+<div class="header">
+	<label>
+<span style="font-family: Licorice, sans-serif;font-size: 4em;">Stalactite</span><span style="font-size: 2em;">&nbsp;&nbsp;ORM</span>
+	</label>
+<nav id="site_nav">
+	<dl>
+		<dt><a href="about/">About</a></dt>
+		<dt><a href="news/">News</a></dt>
+		<dt><a href="stalactite-doc/">Documentation</a></dt>
+	</dl>
+</nav>
+</div>
+<ul class="slideshow">
+	<li class="slide">
+		<img src="https://c.pxhere.com/photos/07/b1/icicles_frozen_cold_snow_winter_icy_bird_feeder_hanging-1008084.jpg!d">
+		<article>
+			<header><span style="font-family: Licorice, sans-serif;font-size: 4em;">Stalactite</span><span style="font-size: 2em;">&nbsp;&nbsp;ORM</span></header>
+			<p>
+				<code>1.0.0</code> soon !
+			</p>
+		</article>
+	</li>
+	<li class="slide">
+		<img src="https://c.pxhere.com/photos/22/c8/caverns_rock_formation_cave_rock_stone_geology_landscape_tourism-858747.jpg!d">
+		<article>
+			<header>Non intrusive mapping</header>
+			<p>
+				<code>map(Person::getName)</code>
+			</p>
+		</article>
+	</li>
+	<li class="slide">
+		<img src="https://c.pxhere.com/images/e7/c7/70b68752d4cfcbcba01cf43760bd-1617711.jpg!d">
+		<article>
+			<header>Visualize entity graph</header>
+			<p>
+			<pre style="text-align: left; margin-left: 0">
+<code data-language="java" class="language-java">
+entityBuilder(Person.class, long.class)
+.map(Person::getId).identifier(IdentifierPolicy.afterInsert())
+.map(Person::getName)
+.mapOneToOne(Person::getHouse, entityBuilder(House.class, long.class)
+	.map(House::getId).identifier(IdentifierPolicy.afterInsert())
+	.mapOneToOne(House::getAddress, entityBuilder(Address.class, long.class)
+		.map(Address::getId).identifier(IdentifierPolicy.afterInsert())
+		.map(Address::getLocation)
+</code>
+			</pre>
+			</p>
+		</article>
+	</li>
+	<li class="slide">
+		<img src="https://c.pxhere.com/photos/5b/e2/photo-24358.jpg!d">
+		<article>
+			<header>Keep your domain clean</header>
+			<p>
+			<ul style="text-align: left; list-style: disc; margin-left: 2em; margin-right: 2em">
+				<li>No bytecode enhancement</li>
+				<li>No default constructor required</li>
+				<li>Implement business equals()/hashCode()</li>
+			</ul>
+			</p>
+		</article>
+	</li>
+</ul>
+<div class="article-container">
+	<article>
+		<header>Non intrusive mapping</header>
+		<p>
+			No annotation nor XML binding is necessary : mapping is defined through <em>method references</em>.
+		</p>
+	</article>
+	<article>
+		<header>Visualize entity graph</header>
+		<p>
+			Thanks to a fluent API, Stalactite lets one define its entity graph, instead of spreading it all over entities by annotation for instance.
+		</p><p>
+			Moreover, since it only <em>fetches data eagerly</em>, you know exactly what will be loaded, hence masterizing graph inflation.
+		</p>
+	</article>
+	<article>
+		<header>Keep your domain clean</header>
+		<p>
+			Stalactite only accesses your properties through reflection : it doesn't require things such as PersistentBag.
+		</p><p>
+			You may also keep your business constructor and let Stalactite uses it while fecthing data from database.
+		</p><p>
+			Your equals/hashCode doesn't need to rely on identifier, it may match businees rules because Stalatite only uses it while comparting Collection, which is a main purpose of equals/hashCode override.
+		</p>
+	</article>
+</div>
+</body>
+<footer>
+	<p>
+		Credits to Guillaume Mary as Art director, Picture finder, Pizza eater, Technical engineer, Beer drinker, Content manager, Story teller, Coffe drinker, Table tennis player, Video games player
+	</p>
+</footer>
+</html>
