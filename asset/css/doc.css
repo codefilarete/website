@@ -15,13 +15,12 @@
 body {
 	font-family: Nunito, sans-serif;
 	/*font-family: Calibri, sans-serif;*/
-	font-size: 12px;
+	font-size: 14px;
 	background-color: gainsboro;
 }
 
 ul {
 	margin: 0;
-	/*padding: 0;*/
 }
 
 em {
@@ -44,7 +43,6 @@ body {
 	width: 300px;
 	overflow-x: hidden;
 	overflow-y: scroll;
-	/*z-index: -1;*/
 	padding: 10px;
 	margin-top: 40px;
 }
@@ -58,7 +56,7 @@ body {
 #content {
 	grid-column: 3;
 	grid-row: 1;
-	padding-left: 20px;
+	padding-left: 3em;
 	background-color: gainsboro;
 }
 
@@ -101,29 +99,36 @@ section .hint {
 	border-left-style: solid;
 	border-left-width: 3px;
 	background-color: darkgray;
-	margin: 2em;
-	padding: 1em;
+	margin: 1em;
+	padding: 0.5em;
 }
 
-section .hint *:first-child {
-	display: inline-block;
+section .hint > * {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+section .hint > *:first-child {
+	display: list-item;
+	list-style-type: none;
+}
+
+section .hint > *:first-child::before {
+	font-family: 'icomoon', sans-serif;
+	position: relative;
+	font-size: 2em;
+	vertical-align: middle;
+	padding: 5px;
 }
 
 section .hint header:first-child {
 	font-weight: bold;
 }
 
-section .hint::before {
-	font-family: 'icomoon', sans-serif;
-	position: relative;
-	font-size: 2em;
-	vertical-align: middle;
-}
-
 section .info {
 	border-left-color: blue;
 }
-section .info::before {
+section .info > *:first-child::before {
 	content: "\e901";
 	color : blue;
 }
@@ -131,21 +136,21 @@ section .info::before {
 section .success {
 	border-left-color: green;
 }
-section .success::before {
+section .success > *:first-child::before {
 	content: "\e900";
 	color : green;
 }
 section .warn {
 	border-left-color: orange;
 }
-section .warn::before {
+section .warn > *:first-child::before {
 	content: "\e903";
 	color : orange;
 }
 section .danger {
 	border-left-color: red;
 }
-section .danger::before {
+section .danger > *:first-child::before {
 	content: "\e902";
 	color : red;
 }
