@@ -21,6 +21,48 @@ ul {
 	padding: 0;
 }
 
+#forkongithub a {
+	color: #e7e7e7;
+	text-align: center;
+	font-family: arial,sans-serif;
+	font-weight: 700;
+	font-size: 1rem;
+	line-height: 2rem;
+	position: relative;
+	transition: .5s;
+	padding: 5px 40px;
+	
+	background-color: #33aec1;
+	text-shadow: -2px 2px 2px black;
+}
+
+@media screen and (min-width: 800px) {
+	#forkongithub {
+		display: block;
+		position: fixed;
+		top: 0;
+		right: 0;
+		width: 200px;
+		height: 200px;
+		overflow: hidden;
+		z-index: 9999;
+	}
+	
+	#forkongithub a {
+		width: 200px;
+		position: absolute;
+		top: 60px;
+		right: -60px;
+		transform: rotate(45deg);
+		box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.8);
+
+		padding-top: 0px;
+		padding-bottom: 0px;
+		border-bottom: 1px solid black;
+		border-top: 1px solid black;
+	}
+}
+
 .header {
 	display: flex;
 	justify-content: space-between;
