@@ -100,13 +100,16 @@ entityBuilder(Person.class, long.class)
 	</article>
 	<article>
 		<header>Keep your domain clean</header>
-		<p>
-			Stalactite only accesses your properties through reflection : it doesn't require things such as PersistentBag.
-		</p><p>
+		<ul>
+		<li>
+			Stalactite only accesses your properties through reflection : it doesn't require bytecode enhancement libraries, and doesn't have PersistentBag.
+		</li><li>
 			You may also keep your business constructor and let Stalactite uses it while fecthing data from database.
-		</p><p>
-			Your equals/hashCode doesn't need to rely on identifier, it may match businees rules because Stalatite only uses it while comparting Collection, which is a main purpose of equals/hashCode override.
-		</p>
+		</li><li>
+			Your equals/hashCode doesn't need to rely on entity identifier, you're free to implement it with business rules because Stalatite only
+			relies on equals/hashCode while comparing Collection, which is one of the purpose of their implementation.
+		</li>
+		</ul>
 	</article>
 </div>
 </body>

@@ -15,12 +15,6 @@ a {
 	text-decoration : none;
 }
 
-ul {
-	list-style: none;
-	margin: 0;
-	padding: 0;
-}
-
 #forkongithub a {
 	color: #e7e7e7;
 	text-align: center;
@@ -83,7 +77,9 @@ ul {
 }
 
 .slideshow {
-	padding-bottom: 50px;
+	list-style: none;
+	margin: 0;
+	padding: 0 0 50px 0;
 }
 
 .article-container {
@@ -95,20 +91,20 @@ ul {
 .article-container > article {
 	background-color: #b2b2b2;
 	padding: 10px
-	/*flex-grow: 1;*/
 }
+
 .article-container > article header {
-	
-	/*color: lightgrey; !* Grey text *!*/
 	padding-bottom: 20px; /* Some padding */
-	/*text-align: center;*/
 	font-size: 2em;
 }
-.article-container > article p {
-	/*color: lightgrey; !* Grey text *!*/
-	/*padding: 20px; !* Some padding *!*/
-	/*text-align: center;*/
-	font-size: 1.3em;
+
+.article-container > article p, .article-container > article li {
+	font-size: 1.2em;
+}
+
+.article-container > article li {
+	list-style-position: outside;
+	margin-left: -1em;
 }
 
 .article-container > article header {
@@ -123,12 +119,10 @@ ul {
 	width: 50%;
 	height: 1px;
 	bottom: 0;
-	/*left: 25%;*/
 	border-bottom: 1px solid dimgray;
 }
 
 .article-container > article em {
-	/*background-color: transparent;*/
 	font-weight: bold;
 	font-style: normal;
 }
