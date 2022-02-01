@@ -15,7 +15,7 @@
     .addEnum(Country::getLanguage).byOrdinal()
 </code></pre>
 <h3 id="ensuring-enum-name-as-persistence-value">Ensuring enum name as persistence value</h3>
-<p>As said before, <strong>enum names are used by default so the following is not necessary</strong>, but one may need to specify it. This can be done
+<p>As said before, <em>enum names are used by default so the following is not necessary</em>, but one may need to specify it. This can be done
 	in the same way as for ordinal value : call <code>byName()</code> after the <code>addEnum(..)</code> method :</p>
 <pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
     .add(Country::getId).identifier(IdentifierPolicy.afterInsert())

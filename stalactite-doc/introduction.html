@@ -56,30 +56,30 @@ Stalactite is born after many years of Hibernate usage, with the observation tha
 <h2 id="disclaimer">Disclaimer</h2>
 <p>In order to fulfill its goal (having an ORM less complex than Hibernate, with non intrusive mapping), some choices were made that may hardly change :</p>
 <ul>
-	<li><strong>no query language</strong> such as HQL/JPQL : because it&rsquo;s perfomance consuming while parsing the text, and because it&rsquo;s
+	<li><em>no query language</em> such as HQL/JPQL : because it&rsquo;s perfomance consuming while parsing the text, and because it&rsquo;s
 		time consuming by its complexity for a developper which wants to implement such a project ! For now a fluent API is available for CRUD SQL
 		statement writing, as well as a fluent API to describe the may of reading a produced ResultSet.
 	</li>
-	<li><strong>no attach/detach</strong> concept, no first-level cache : because Stalactite doesn&rsquo;t need it at first. One reason for having the
+	<li><em>no attach/detach</em> concept, no first-level cache : because Stalactite doesn&rsquo;t need it at first. One reason for having the
 		attach concept is to get an easy way to audit changes on entities, so the system can know which modifications should be sent to the database.
 		Stalactite uses a difference algorithm computation to find those changes. This has a drawback : when updating an entity, the algorithm needs
 		the modified version of the bean, as well as the unmodified version, usually coming from the database (but could be a serialized version of
 		it, with risk of being out of sync with database of course). This implies that Stalactite will load your entity graph when you&rsquo;ll use
 		the update(..) method, this may seems cumbersome but matches the load-update-persist pattern that happens behind the scene of Hibernate too.
 	</li>
-	<li><strong>no annotations, requires Java 8 at least</strong> : as explained above, annotations are not the expected way to define mapping of
+	<li><em>no annotations, requires Java 8 at least</em> : as explained above, annotations are not the expected way to define mapping of
 		entities because they are too intrusive. So the mapping will be done through Java Method References.
 	</li>
-	<li><strong>no lazy loading, promote bounded context / small aggregate roots</strong> : in order to let developpers assess what they are doing
-		with the database (in term of performance), and avoid lazy exceptions, <strong>relations are always fetched</strong>. By this way developper
+	<li><em>no lazy loading, promote bounded context / small aggregate roots</em> : in order to let developpers assess what they are doing
+		with the database (in term of performance), and avoid lazy exceptions, <em>relations are always fetched</em>. By this way developper
 		is encouraged to create several aggregates instead of one huge entity graph.
 	</li>
 </ul>
-<p>As a bonus Stalactite <strong>doesn&rsquo;t use bytecode enhancement,</strong> because it doesn&rsquo;t need to modify given beans nor their
+<p>As a bonus Stalactite <em>doesn&rsquo;t use bytecode enhancement,</em> because it doesn&rsquo;t need to modify given beans nor their
 	collections. But it uses reflection to apply values onto beans.</p>
 <p>As a good pratice, only <code>PreparedStatement</code> are used to avoid SQL Injection. Meanwhile select statement are not totally protected
-	because one can append any kind of Object in the SQL as parameter. So, as a developer, <strong>you must care that SQL queries don&rsquo;t
-		concatenate unprotected sources</strong>.</p>
+	because one can append any kind of Object in the SQL as parameter. So, as a developer, <em>you must care that SQL queries don&rsquo;t
+		concatenate unprotected sources</em>.</p>
 <section class="hint danger">
 <header>Known limitations</header>
 <ul>

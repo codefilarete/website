@@ -24,7 +24,7 @@ Column&lt;Table, String&gt; nameColumn = personTable.addColumn(&quot;name&quot;,
 Column&lt;Table, Integer&gt; ageColumn = personTable.addColumn(&quot;age&quot;, int.class);
 List&lt;Person&gt; persons = persistenceContext.select(Person::new, idColumn, nameColumn, ageColumn);
 </code></pre>
-<h3 id="filling-beans-outside-of-constructor"><strong>Filling beans outside of constructor</strong></h3>
+<h3 id="filling-beans-outside-of-constructor">Filling beans outside of constructor</h3>
 <p>Some methods whose signatures are close to above ones are available with an extra parameter that allows bean properties fullfilment outside of
 	constructor : an extra Consumer argument lets you add Columns and consume them. Here is an example :</p>
 <pre><code class="language-java">// Supposing a Person class with a 1-arg constructor and 2 properties 'name' and 'age' with their respective setter
@@ -38,7 +38,7 @@ List&lt;Person&gt; persons = persistenceContext.select(Person::new,
                                                       .add(nameColumn, Person::setName)
                                                       .add(ageColumn, Person::setAge));
 </code></pre>
-<h3 id="filtering-query"><strong>Filtering query</strong></h3>
+<h3 id="filtering-query">Filtering query</h3>
 <p>Possibility to filter table is available as an extra <code>Consumer</code> of <code>CriteriaChain</code> that allows you to chain and / or criteria
 	that will be appended to SQL where clause. Please note that columns should still be the one of same table and select clause (else it would
 	generate an SQL targeting several tables without joining them), as <code>select(..)</code> method focuses on that use case.</p>

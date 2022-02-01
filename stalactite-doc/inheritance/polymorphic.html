@@ -1,7 +1,7 @@
 <h2 id="polymorphic">Polymorphic</h2>
 <p>In this chapter you&rsquo;ll learn how to define a persister that allows to persist subtypes of one parent class, and, at load time, creates instances whose type is deduced from data.</p>
 <p>The entry point for it is the <code>mapPolymorphism(PolymorphismPolicy)</code> method : depending on the way you want to spread your data uppon tables, you&rsquo;ll have to give the right polymorphism policy which is it self built from one of the methods available on the <code>PolymorphismPolicy</code>type.</p>
-<h3 id="persisting-all-siblings-in-same-table--single-table"><strong>Persisting all siblings in same table : single-table</strong></h3>
+<h3 id="persisting-all-siblings-in-same-table--single-table">Persisting all siblings in same table : single-table</h3>
 <p>Single-table policy is available from <code>PolymorphismPolicy.singleTable()</code> method, on which one must chain <code>addSubClass(..)</code> for each subtype to be managed by persister. This method takes a subentity configuration as argument, which is available through <code>MappingEase.subentityBuilder(..)</code>, as well as a discriminator value that allows to distinguish instance type from its siblings. Hereafter is an exemple : </p>
 <pre><code class="language-java">EntityPersister&lt;AbstractVehicle, Long&gt; abstractVehiclePersister = MappingEase.entityBuilder(AbstractVehicle.class, Long.class)
     .add(AbstractVehicle::getId).identifier(afterInsert())
@@ -14,7 +14,7 @@
     .build(persistenceContext);
 </code></pre>
 <p>The discriminator column name can be configured as a parameter of <code>singleTable()</code>, by default it is &ldquo;DTYPE&rdquo;.</p>
-<h3 id="persisting-each-sibling-in-its-dedicated-table--table-per-class"><strong>Persisting each sibling in its dedicated table : table-per-class</strong></h3>
+<h3 id="persisting-each-sibling-in-its-dedicated-table--table-per-class">Persisting each sibling in its dedicated table : table-per-class</h3>
 <p>Table-per-class policy is available from <code>PolymorphismPolicy.tablePerClass()</code> method, on which one must chain <code>addSubClass(..)</code> for each subtype to be managed by persister. This method takes subentity configuration as argument, which is available through <code>MappingEase.subentityBuilder(..)</code>. Hereafter is an exemple : </p>
 <pre><code class="language-java">EntityPersister&lt;AbstractVehicle, Long&gt; abstractVehiclePersister = MappingEase.entityBuilder(AbstractVehicle.class, Long.class)
     .add(AbstractVehicle::getId).identifier(afterInsert())
@@ -27,7 +27,7 @@
     .build(persistenceContext);
 </code></pre>
 <p>Child tables can be explicitly targeted with a <code>Table</code> extra parameter of the <code>addSubClass(..)</code> method.</p>
-<h3 id="persisting-parent-properties-in-one-table-and-siblings-ones-in-dedicated-ones--join-table"><strong>Persisting parent properties in one table and siblings ones in dedicated ones : join-table</strong></h3>
+<h3 id="persisting-parent-properties-in-one-table-and-siblings-ones-in-dedicated-ones--join-table">Persisting parent properties in one table and siblings ones in dedicated ones : join-table</h3>
 <p>Join-table policy is available from <code>PolymorphismPolicy.joinTable()</code> method, on which one must chain <code>addSubClass(..)</code> for each subtype to be managed by persister. This method takes subentity configuration as argument, which is available through <code>MappingEase.subentityBuilder(..)</code>. Hereafter is an exemple : </p>
 <pre><code class="language-java">EntityPersister&lt;AbstractVehicle, Long&gt; abstractVehiclePersister = MappingEase.entityBuilder(AbstractVehicle.class, Long.class)
     .add(AbstractVehicle::getId).identifier(afterInsert())

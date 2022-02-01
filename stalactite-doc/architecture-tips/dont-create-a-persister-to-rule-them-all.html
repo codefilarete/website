@@ -14,8 +14,8 @@
 <p>Another option would use the JPA <code>@NamedEntityGraph</code> annotation to configure some graph-loading contexts. But this as a drawback : you&rsquo;re
 	still using a unique entity graph that is partially loaded, which doesn&rsquo;t help developper to know which relation is loaded or not.</p>
 <section class="hint success">
-<p>Stalactite promotes the aggregate approach because <strong>you can visualize the graph complexity</strong> when you write your mapping : hundreds
+<p>Stalactite promotes the aggregate approach because <em>you can visualize the graph complexity</em> when you write your mapping : hundreds
 	lines of mapping would warn you about your graph inflation.</p>
 </section>
-<p>As a second advantage, by chaining your configuration writing, one may be less tempted to persist an intermediary entity and would <strong>always
-	access your graph by its root</strong>, which also implies a no-surprise graph loading (no additional surprising select). </p>
+<p>As a second advantage, by chaining your configuration writing, one may be less tempted to persist an intermediary entity and would <em>always
+	access your graph by its root</em>, which also implies a no-surprise graph loading (no additional surprising select). </p>

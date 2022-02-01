@@ -4,7 +4,7 @@
 	exist with a signature accepting <code>Query</code> object which can be build thanks to a fluent API starting with
 	<code>QueryEase.select(..)</code>. </p>
 </section>
-<h3 id="from-an-sql-statement"><strong>From an SQL statement</strong></h3>
+<h3 id="from-an-sql-statement">From an SQL statement</h3>
 <p>An object can be created from a simple SQL query thanks to the <code>PersistenceContext#newQuery(CharSequence, Class)</code> method. The first
 	argument contains the SQL to be executed, and the second is the type of bean built by the execution of the query. Then one can map selected
 	columns to object properties through method references :\</p>
@@ -31,7 +31,7 @@
     .map(&quot;isoCode&quot;, Country::setIsoCode)
     .execute();
 </code></pre>
-<h3 id="setting-request-parameter"><strong>Setting request parameter</strong></h3>
+<h3 id="setting-request-parameter">Setting request parameter</h3>
 <p>Of course one can give parameters to the query and set them through <code>set(..)</code> methods. Parameters are named (not indexed) and must be
 	prefixed by “:” in SQL, such as below :</p>
 <pre><code class="language-java">persistenceContext.newQuery(&quot;select name, isoCode from Country where isoCode = :code&quot;, Country.class)
@@ -43,7 +43,7 @@
 <p>Note that Stalactite will detect parameters and transform SQL as a <code>PreparedStatement</code> to avoid SQL injection. Meanwhile parameter
 	detection is a kind of “simple and stupid” algorithm and won’t take all cases into account for now. </p>
 </section>
-<h3 id="creating-a-bean-graph"><strong>Creating a bean graph</strong></h3>
+<h3 id="creating-a-bean-graph">Creating a bean graph</h3>
 <p>Previous paragraphs create one bean per row and a very flat object but Stalactite allows the creation of complex tree by defining object keys and
 	relations. For instance one can create an entity by using <code>mapKey(..)</code> methods (there are several signatures of them) to define the
 	identifier of root bean. In example below <code>Country</code> class has a one-arg constructor that gets the instance identifier :</p>
