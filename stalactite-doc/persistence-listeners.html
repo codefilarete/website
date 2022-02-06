@@ -15,12 +15,12 @@
 <p>They all can be given to an <code>EntityPersister</code>, which is the result of the <code>entityBuilder(..)...build(..)</code> method, through
 	dedicated <code>addListener(..)</code> methods. Here is an example that manages timestamp of a Car : </p>
 <pre><code class="language-java">EntityPersister&lt;Car, Long&gt; carPersister = entityBuilder(Car.class, Long.class)
-    .add(Car::getId).identifier(afterInsert())
-    .add(Car::getModel)
-    .add(Car::getColor)
+    .mapKey(Car::getId, afterInsert())
+    .map(Car::getModel)
+    .map(Car::getColor)
     .embed(Car::getTimestamp, embeddableBuilder(Timestamp.class)
-        .add(Timestamp::getCreationDate)
-        .add(Timestamp::getModificationDate))
+        .map(Timestamp::getCreationDate)
+        .map(Timestamp::getModificationDate))
     .build(persistenceContext);
 
 carPersister.addInsertListener(new InsertListener&lt;Car&gt;() {

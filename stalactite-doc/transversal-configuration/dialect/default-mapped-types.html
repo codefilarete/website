@@ -14,7 +14,7 @@ myDialect.getSqlTypeRegistry().put(AtomicInteger.class, &quot;integer&quot;);
 <p>You can do the same but exceptionnaly for a Column :</p>
 <pre><code class="language-java">Dialect myDialect = new Dialect();
 Table myTable = new Table(&quot;myTable&quot;);
-Column&lt;AtomicIntger&gt; myAtomicColumn = myTable.addColumn(&quot;counter&quot;, AtomicInteger.class);
+Column&lt;Table, AtomicInteger&gt; myAtomicColumn = myTable.addColumn(&quot;counter&quot;, AtomicInteger.class);
 myDialect.getSqlTypeRegistry().put(myAtomicColumn, &quot;integer&quot;);
 </code></pre>
 

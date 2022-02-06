@@ -18,20 +18,19 @@
 	mapping can be defined as this :</p>
 <pre><code class="language-java">FluentEmbeddableMappingBuilder&lt;Vehicle&gt; vehiclePersistenceConfigurer =
     MappingEase.embeddableBuilder(Vehicle.class)
-	.add(Vehicle::getColor)
-
+	.map(Vehicle::getColor);
 
 MappingEase.entityBuilder(Car.class, Long.class)
 	// concrete class defines id
-	.add(Car::getId).identifier(IdentifierPolicy.afterInsert())
-	.add(Car::getModel)
-	.mapSuperClass(vehiclePersistenceConfigurer
+	.mapKey(Country::getId, IdentifierPolicy.afterInsert())
+	.map(Car::getModel)
+	.mapSuperClass(vehiclePersistenceConfigurer)
 	.build(persistenceContext);
 	
 MappingEase.entityBuilder(Truk.class, Long.class)
 	// concrete class defines id
-	.add(Truk::getId).identifier(IdentifierPolicy.afterInsert())
-	.add(Truk::getEngine)
+	.mapKey(Truk::getId, IdentifierPolicy.afterInsert())
+	.map(Truk::getEngine)
 	.mapSuperClass(vehiclePersistenceConfigurer)
 	.build(persistenceContext);
 </code></pre>
@@ -43,13 +42,13 @@ MappingEase.entityBuilder(Truk.class, Long.class)
 <pre><code class="language-java">EntityMappingConfiguration&lt;Vehicle, Long&gt; inheritanceConfiguration = MappingEase
       .entityBuilder(Vehicle.class, Long.class)
       // mapped super class defines id
-      .add(Vehicle::getId).identifier(IdentifierPolicy.afterInsert())
-      .add(Vehicle::getColor)
+      .mapKey(Country::getId, IdentifierPolicy.afterInsert())
+      .map(Vehicle::getColor)
       .getConfiguration();
 
-Persister&lt;Car, Long, ?&gt; carPersister = MappingEase
+EntityPersister&lt;Car, Long&gt; carPersister = MappingEase
       .entityBuilder(Car.class, Long.class)
-      .add(Car::getModel)
+      .map(Car::getModel)
       .mapInheritance(inheritanceConfiguration)
       .build(persistenceContext);
 </code></pre>
@@ -60,13 +59,13 @@ Persister&lt;Car, Long, ?&gt; carPersister = MappingEase
 <pre><code class="language-java">EntityMappingConfiguration&lt;Vehicle, Long&gt; inheritanceConfiguration = MappingEase
       .entityBuilder(Vehicle.class, Long.class)
       // mapped super class defines id
-      .add(Vehicle::getId).identifier(IdentifierPolicy.afterInsert())
-      .add(Vehicle::getColor)
+      .mapKey(Country::getId, IdentifierPolicy.afterInsert())
+      .map(Vehicle::getColor)
       .getConfiguration();
 
-Persister&lt;Car, Long, ?&gt; carPersister = MappingEase
+EntityPersister&lt;Car, Long&gt; carPersister = MappingEase
       .entityBuilder(Car.class, Long.class)
-      .add(Car::getModel)
+      .map(Car::getModel)
       .mapInheritance(inheritanceConfiguration)
             .withJoinedTable(new Table(&quot;Vehicle&quot;))
       .build(persistenceContext);

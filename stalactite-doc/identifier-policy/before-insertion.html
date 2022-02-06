@@ -12,6 +12,6 @@ PooledHiLoSequence longSequence = new PooledHiLoSequence(new PooledHiLoSequenceO
 
 
 MappingEase.entityBuilder(Car.class, long.class)
-    .add(Car::getId).identifier(IdentifierPolicy.beforeInsert(longSequence))
-    .add(Car::getModel)
+    .mapKey(Car::getId, IdentifierPolicy.beforeInsert(longSequence))
+    .map(Car::getModel)
 </code></pre>

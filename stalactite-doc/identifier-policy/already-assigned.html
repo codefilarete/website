@@ -13,8 +13,8 @@
 	mentioned above).</p>
 <p>Here is an example with state stored on entity :</p>
 <pre><code class="language-java">MappingEase.entityBuilder(Car.class, long.class)
-    .add(Car::getId).identifier(IdentifierPolicy.alreadyAssigned(Car::markAsPersisted, Car::isPersisted))
-    .add(Car::getModel)
+    .mapKey(Car::getId, IdentifierPolicy.alreadyAssigned(Car::markAsPersisted, Car::isPersisted))
+    .map(Car::getModel)
 </code></pre>
 <section class="hint success">
 <p>This policy accepts any type of identifier. For instance UUID is a good candidate, but a more business one can also be used. </p>

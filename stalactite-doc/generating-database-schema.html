@@ -4,18 +4,18 @@
 	<code>Persister</code>s, because it will automatically discover <code>Table</code>s and <code>Column</code>s that were added to the context. Then
 	we only have to invoke <code>deployDDL()</code> : </p>
 <pre><code class="language-java">DataSource dataSource = ... // create one from whatever manner
-PersistenceContext persistenceContect = new PersistenceContext(new JdbcConnectionProvider(dataSource), new MySQLDialect());
+PersistenceContext persistenceContect = new PersistenceContext(new DataSourceConnectionProvider(dataSource), new MySQLDialect());
 
-Persister&lt;Country, Long, Table&gt; countryPersister = MappingEase.entityBuilder(Country.class, Long.class)
-    .add(Country::getId).identifier(IdentifierPolicy.afterInsert())
-    .add(Country::getName)
+EntityPersister&lt;Country, Long&gt; countryPersister = MappingEase.entityBuilder(Country.class, Long.class)
+    .mapKey(Country::getId, IdentifierPolicy.afterInsert())
+    .map(Country::getName)
     .build(persistenceContext);
 
 DDLDeployer ddlDeployer = new DDLDeployer(persistenceContext);
 ddlDeployer.deployDDL();
 </code></pre>
 <p>If you need, you can also add some tables by accessing its <code>DDLGenerator</code> : </p>
-<pre><code class="language-java">Table myTable = new Table(&quot;myTable);
+<pre><code class="language-java">Table myTable = new Table("myTable");
 myTable.addColumn(&quot;myColumn&quot;, String.class);
 
 DDLDeployer ddlDeployer = new DDLDeployer(persistenceContext);
