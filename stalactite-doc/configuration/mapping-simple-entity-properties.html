@@ -3,22 +3,22 @@
 	the <code>entityBuilder(..)</code> method, such as this :</p>
 <pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
 </code></pre>
-<p>Then you can add simple properties by chaining them with the <code>add(..)</code> method</p>
+<p>Then you can add simple properties by chaining them with the <code>map(..)</code> method</p>
 <pre>
 <code data-language="java" class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
-    .map(Country::getId)
+    .mapKey(Country::getId, IdentifierPolicy.afterInsert())
     .map(Country::getName)
 </code>
 </pre>
 <section class="hint info">
 <p>Note that setters can be used as well : </p>
 <pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
-    .map(Country::setId)
+    .mapKey(Country::getId, IdentifierPolicy.afterInsert())
     .map(Country::setName)
 </code></pre>
 </section>
 <h3 id="identifier">Identifier</h3>
-<p>After the <code>add(..)</code> method, one can use the <code>identifier(..)</code> method to declare the property as the identifying one. An
+<p>After the <code>map(..)</code> method, one can use the <code>identifier(..)</code> method to declare the property as the identifying one. An
 	identifier management policy must be given as argument.</p>
 <pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
     .mapKey(Country::getId, IdentifierPolicy.afterInsert())
@@ -37,15 +37,15 @@
 <p>Please note that <em>primitive type properties are considered mandatory</em>, so it is not necessary to declare them as mandatory </p>
 </section>
 <h4 id="setting-a-column-name">Setting a column name</h4>
-<p>You can override a property column name by adding it as an argument of the <code>add(..)</code> method. </p>
+<p>You can override a property column name by adding it as an argument of the <code>map(..)</code> method. </p>
 <pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
     .mapKey(Country::getId, IdentifierPolicy.afterInsert())
     .map(Country::getName, &quot;isoCode&quot;)
 </code></pre>
 <h4 id="setting-a-column">Setting a column</h4>
 <p>If you already have a <code>Table</code> instance (a Stalactite <code>orm</code> class) representing the database table and its <code>Column</code>
-	instances you can reference them in the <code>add(..)</code> method, as you do for a column name.</p>
-<p>Column type and property type must match, this is guaranteed by generics type of the <code>add(..)</code> method signature.</p>
+	instances you can reference them in the <code>map(..)</code> method, as you do for a column name.</p>
+<p>Column type and property type must match, this is guaranteed by generics type of the <code>map(..)</code> method signature.</p>
 <pre><code class="language-java">// Declaring a Table representing the one of the database schema
 Table countryTable = new Table(&quot;country&quot;);
 Column&lt;Table, String&gt; isoCodeColumn = countryTable.addColumn(&quot;isoCode&quot;, String.class);

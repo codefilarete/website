@@ -6,7 +6,7 @@
 PersistenceContext persistenceContect = new PersistenceContext(new JdbcConnectionProvider(dataSource), new MySQLDialect());
 
 EntityPersister&lt;Country, Long, Table&gt; countryPersister = MappingEase.entityBuilder(Country.class, Long.class)
-    .map(Country::getId)
+    .mapKey(Country::getId, IdentifierPolicy.afterInsert())
     .map(Country::getName)
     // ... configuration is explain in next chapters
     .build(persistenceContext);

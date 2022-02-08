@@ -11,7 +11,7 @@
 	it&rsquo;s business, because most of the time it doesn&rsquo;t deal with duplicate nor index. </p>
 </section>
 <h3 id="mapping-sets">Mapping Sets</h3>
-<p>When declaring your mapping, one can use <code>addOneToManySet</code> to map a Set.</p>
+<p>When declaring your mapping, one can use <code>mapOneToManySet</code> to map a Set.</p>
 <pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
     .mapKey(Country::getId, IdentifierPolicy.afterInsert())
     .map(Country::getName)
@@ -32,7 +32,7 @@
 </section>
 
 <h3 id="mapping-lists">Mapping Lists</h3>
-<p>Mapping a <code>List</code> is closed to mapping a Set : you&rsquo;ll have to use <code>addOneToManyList(..)</code> and use
+<p>Mapping a <code>List</code> is closed to mapping a Set : you&rsquo;ll have to use <code>mapOneToManyList(..)</code> and use
 	<code>indexedBy(..)</code> method to declare the index column, as the latter is optional Stalactite will use &ldquo;idx&rdquo; as a default name
 	for this column.</p>
 <pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
