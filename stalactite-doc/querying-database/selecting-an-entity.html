@@ -3,7 +3,7 @@
 <section class="hint warn">
 <p>Only properties used by mapping can be used as criteria. If a criteria contains a non-mapped property then an exception will be raised. </p>
 </section>
-<p>Here is a simple example to get all countries whose name starts with &ldquo;F&rdquo;, operators are available in class <code>org.gama.stalactite.query.model.Operators</code>.
+<p>Here is a simple example to get all countries whose name starts with &ldquo;F&rdquo;, operators are available in class <code>org.codefilarete.stalactite.query.model.Operators</code>.
 </p>
 <pre><code class="language-java">EntityPersister&lt;Country, Long&gt; persister = entityBuilder(Country.class, Long.class)
     .mapKey(Country::getId, IdentifierPolicy.afterInsert())
