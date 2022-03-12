@@ -1,0 +1,52 @@
+@import '../../asset/css/normalize.css';
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cutive+Mono&display=swap');
+/*@import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap');*/
+@import url('https://fonts.googleapis.com/css2?family=Licorice&display=swap');
+
+@font-face {
+	font-family: 'icomoon';
+	src:  url('../icon/fonts/icomoon.eot?nahhej');
+	src:  url('../icon/fonts/icomoon.eot?nahhej#iefix') format('embedded-opentype'),
+	url('../icon/fonts/icomoon.ttf?nahhej') format('truetype'),
+	url('../icon/fonts/icomoon.woff?nahhej') format('woff'),
+	url('../icon/fonts/icomoon.svg?nahhej#icomoon') format('svg');
+}
+
+body {
+	font-family: Lato, sans-serif;
+	/*font-family: Nunito, sans-serif;*/
+	/*font-family: Calibri, sans-serif;*/
+	font-size: 12px;
+	background-color: gainsboro;
+	overflow-y: hidden;
+	margin: 0px;
+}
+
+#welcome {
+	grid-column: 1 / 4;
+	grid-row: 1;
+	text-align: center;
+	font-weight: bolder;
+	background-color: gainsboro;
+	padding: 10px;
+	box-shadow: 0 0 5px black;
+}
+
+#welcome {
+	display: flex;
+	flex-flow: row;
+	justify-content: space-between;
+}
+
+#welcome > span {
+	/* Centering welcome message */
+	width: 100%;
+	font-size: 36px;
+}
+
+#content {
+	padding-left: 1em;
+	padding-right: 1em;
+	background-color: gainsboro;
+}
