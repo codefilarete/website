@@ -3,7 +3,7 @@
 <p>To build a <code>Persister</code>, a <code>PersistenceContext</code> is necessary : it contains database oriented informations such as a JDBC<code>Connection</code> provider and a <code>Dialect</code>.</p>
 <p>Here is an example:</p>
 <pre><code class="language-java">DataSource dataSource = ... // create one from whatever manner
-PersistenceContext persistenceContect = new PersistenceContext(new JdbcConnectionProvider(dataSource), new MySQLDialect());
+PersistenceContext persistenceContext = new PersistenceContext(new JdbcConnectionProvider(dataSource), new MySQLDialect());
 
 EntityPersister&lt;Country, Long, Table&gt; countryPersister = MappingEase.entityBuilder(Country.class, Long.class)
     .mapKey(Country::getId, IdentifierPolicy.afterInsert())
@@ -19,4 +19,4 @@ countryPersister.delete(country);
 
 Country loadedCountry = countryPersister.select(1);
 </code></pre>
-<p>Of course you can share your <code>PersistenceContext</code> accross <code>EntityPersister</code> building.</p>
+<p>Of course you can share your <code>PersistenceContext</code> across <code>EntityPersister</code> building.</p>

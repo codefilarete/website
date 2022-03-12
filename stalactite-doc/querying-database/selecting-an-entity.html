@@ -1,5 +1,5 @@
 <p>Beyond classic possibility to select an entity through its id, Stalactite provides a way to retrieve them through some criteria that match their
-	properties : criteria are targetted through their method reference as they were defined during mapping.</p>
+	properties : criteria are targeted through their method reference as they were defined during mapping.</p>
 <section class="hint warn">
 <p>Only properties used by mapping can be used as criteria. If a criteria contains a non-mapped property then an exception will be raised. </p>
 </section>
@@ -13,7 +13,7 @@
 List&lt;Country&gt; countries = persister.selectWhere(Country::getName, Operators.startsWith(&quot;F&quot;))
         .execute();
 </code></pre>
-<p>It also worlk with relation, herafter with a one-ton-many :</p>
+<p>It also works with relation, hereafter with a one-ton-many :</p>
 <pre><code class="language-java">RelationalEntityPersister&lt;Country, Long&gt; persister = (RelationalEntityPersister) entityBuilder(Country.class, Long.class)
     .mapKey(Country::getId, IdentifierPolicy.afterInsert())
     .map(Country::getName)
@@ -27,5 +27,5 @@ List&lt;Country&gt; select = persister.selectWhere(Country::getName, Operators.s
         .andMany(Country::getCities, City::getName, Operators.eq(&quot;Grenoble&quot;))
 	.execute();
 </code></pre>
-<p>Beware that result returned by <code>entityBuilder(..).build(..)</code> must be casted to <code>RelationalEntityPersister</code> to allow chaining
+<p>Beware that result returned by <code>entityBuilder(..).build(..)</code> must be cast to <code>RelationalEntityPersister</code> to allow chaining
 	criteria for relations such as <code>andMany(..)</code>.</p>

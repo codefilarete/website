@@ -14,13 +14,13 @@
 	<tr>
 		<td>ALL</td>
 		<td>target is inserted if not already, or updated</td>
-		<td>target is updated, not deleted if deassociated</td>
+		<td>target is updated, not deleted if de-associated</td>
 		<td>target is not deleted</td>
 	</tr>
 	<tr>
 		<td>ALL_ORPHAN_REMOVAL</td>
 		<td>target is inserted if not already or updated</td>
-		<td>target is updated, and deleted is deassociated</td>
+		<td>target is updated, and deleted is de-associated</td>
 		<td>target is deleted</td>
 	</tr>
 	<tr>
@@ -32,13 +32,13 @@
 	<tr>
 		<td>ASSOCIATION_ONLY</td>
 		<td>targets and association table records are inserted</td>
-		<td>targets and association table records are updated (records may be deleted if target is deassociated)</td>
+		<td>targets and association table records are updated (records may be deleted if target is de-associated)</td>
 		<td>targets are not deleted but association table record are deleted</td>
 	</tr>
 	</tbody>
 </table>
 <section class="hint info">
 <p><em>ASSOCIATION_ONLY particular case</em></p>
-<p>Please note that this policy is only relevent for one-to-many relation with association table.</p>
+<p>Please note that this policy is only relevant for one-to-many relation with association table.</p>
 <p>This policy is intended to be used when targets shouldn&rsquo;t be inserted nor deleted but association must be maintained. </p>
 </section>

@@ -21,13 +21,13 @@
 </code></pre>
 <p>If your relation is owned by reverse side, then you&rsquo;ll find how to declare it below.</p>
 <h4 id="sorting-sets">Sorting Sets</h4>
-<p>Since Stalactite doesn&rsquo;t use bytecode enhancement it leaves your <code>Set</code> untouched and won&rsquo;t instanciate one for you. This
+<p>Since Stalactite doesn&rsquo;t use bytecode enhancement it leaves your <code>Set</code> untouched and won&rsquo;t instantiate one for you. This
 	means that your field must be initialized before it is filled by Stalactite, else a NullPointerException will be thrown (initialization at
-	construction time is a good place). This may look painfull but it leaves you a high degree of customization for it.</p>
+	construction time is a good place). This may look painful but it leaves you a high degree of customization for it.</p>
 
 <section class="hint warn">
 <p>You may choose to use LinkedHashSet thinking that you&rsquo;ll keep entity collection addition order, but that&rsquo;s not true because you&rsquo;ll
-	get <code>ResultSet</code> order which is not guaranteed to be steady accross SQL select execution : Databases don&rsquo;t guarantee this order,
+	get <code>ResultSet</code> order which is not guaranteed to be steady across SQL select execution : Databases don&rsquo;t guarantee this order,
 	even if it is often (always ?) the same. </p>
 </section>
 
@@ -68,7 +68,7 @@ MappingEase.entityBuilder(Country.class, Long.class)
     .mappedBy(cityCountryPointer)
 </code></pre>
 <h3 id="cascade-type">Cascade type</h3>
-<p>By default, cascade policy is <code>ALL</code> (which means that unsaved target instance is save when root is saved, but not deleted when root is
+<p>By default, cascade policy is <code>ALL</code> (which means that unsaved target instance is saved when root is saved, but not deleted when root is
 	deleted), this behavior can be changed with the <code>cascading(..)</code> method :</p>
 <pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
     .mapKey(Country::getId, IdentifierPolicy.afterInsert())

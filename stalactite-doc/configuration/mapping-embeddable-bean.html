@@ -36,7 +36,7 @@
 
 <h3 id="embedding-of-embedding">Embedding of embedding</h3>
 <p>In some cases one may need to embed a bean of an already-embedded bean, then you should use the <code>embed(..)</code> method as in this
-	(totally fake) exemple where president modification date is used as the election date stored in the country table :</p>
+	(totally fake) example where president modification date is used as the election date stored in the country table :</p>
 <pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
     .mapKey(Country::getId, IdentifierPolicy.afterInsert())
     .embed(Country::getPresident, MappingEase.embeddableBuilder(Person.class)

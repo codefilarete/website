@@ -32,7 +32,7 @@
     .mapKey(Country::getId, IdentifierPolicy.afterInsert())
     .map(Country::getName).mandatory()
 </code></pre>
-<p>This will add a non null constraint on the database column, and will throw an exception in case of null value at insertion and update time.</p>
+<p>This will add a non-null constraint on the database column, and will throw an exception in case of null value at insertion and update time.</p>
 <section class="hint success">
 <p>Please note that <em>primitive type properties are considered mandatory</em>, so it is not necessary to declare them as mandatory </p>
 </section>

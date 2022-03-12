@@ -12,30 +12,33 @@ To fulfill this goal, the project is devided in 3 main modules :
 <p>One can use <code>core</code> or <code>sql</code> out of <code>orm</code>, but this documentation mainly talks about the <code>orm</code> module.</p>
 <section class="hint info">
 <p>Stalactite depends on 2 others projects called <em>Reflections</em> and <em>Tool</em> under <code>org.codefilarete</code> groupId, made to decouple things,
-	but they are not intended to be used outside of this organisation : using them outside of it is not supported </p>
+	but they are not intended to be used outside this organisation : using them outside it is not supported </p>
 </section>
 	
-<h2 id="why--the-genese">Why ? The genese</h2>
-Stalactite is born after many years of Hibernate usage, with the observation that teams hardly master the framework even after years of practice :
+<h2 id="why--the-genesis">Why ? The genesis</h2>
+Stalactite is born after many years of Hibernate usage on a application with a large domain (implying the creation of more than 200 database tables)
+which entities were directly exposed to the view. Over time this appeared to be a misconception since with a classical ORM this leads to a bothering
+fetch-all and cache-all solution to avoid lazy initialization error for the former, which caused performance issue, solved by the latter.
+Moreover, it comes with the observation that teams hardly master the framework even after years of practice :
 <ul>
-	<li>putting annotations on files is painless, but after some months of development, entity graph becomes a spaghetti plate where you can&rsquo;t
-		get only a piece of it without loading the whole. Then you&rsquo;ll have to add additional annotation such as <code>@NamedEntityGraph</code> to
+	<li>putting annotations on files is painless, but after some months of development, entity graph becomes a spaghetti plate where you can't
+		get only a piece of it without loading the whole. Then you'll have to add additional annotation such as <code>@NamedEntityGraph</code> to
 		specify what you want to load
 	</li>
-	<li>entity state (attached, detached, etc.) is still a problem for newcomers, and developpers still struggle with it after years of practise, or
-		have rewritten (even if not optimized) a layer on top of repository to avoid to deal with it
+	<li>entity state (attached, detached, etc.) is still a problem for newcomers, and developers still struggle with it after years of practise, or
+		have rewritten (even if not optimized) a layer on top of repository to avoid dealing with it
 	</li>
 	<li>then come the well-known and common exceptions LazyInitializationException, StaleStateObjectException, &hellip;</li>
 </ul>
 <section class="hint info">
 	<header>Some particular words about @Annotations usage impact</header>
-	By using annotations for mapping, we lack a non intrusive way of declaring it (HBM/XML is still possible but not officially well maintained), for
+	By using annotations for mapping, we lack a non-intrusive way of declaring it (HBM/XML is still possible but not officially well maintained), for
 	example :
 	<ul>
 		<li>in a Domain Driven Design project, where Domain must be framework-agnostic, annotations are a problem. To overcome this problem a copy of
 			Domain entities can be introduced in persistence module to get a Persistence Domain, helped by a one-one mapper, this introduces
 			duplicates
-			and boilerplate code. Worth mentionning that bidirectionality between some entity can be quite complex to solve by the mapper.
+			and boilerplate code. Worth mentioning that bidirectionality between some entity can be quite complex to solve by the mapper.
 		</li>
 		<li>quickly persisting some data coming from a Controller is not possible before mapping them to entity, which will produce boilerplate code
 			or
@@ -54,10 +57,10 @@ Stalactite is born after many years of Hibernate usage, with the observation tha
 </section>
 
 <h2 id="disclaimer">Disclaimer</h2>
-<p>In order to fulfill its goal (having an ORM less complex than Hibernate, with non intrusive mapping), some choices were made that may hardly change :</p>
+<p>In order to fulfill its goal (having an ORM less complex than Hibernate, with non-intrusive mapping), some choices were made that may hardly change :</p>
 <ul>
 	<li><em>no query language</em> such as HQL/JPQL : because it&rsquo;s perfomance consuming while parsing the text, and because it&rsquo;s
-		time consuming by its complexity for a developper which wants to implement such a project ! For now a fluent API is available for CRUD SQL
+		time consuming by its complexity for a developer which wants to implement such a project ! For now a fluent API is available for CRUD SQL
 		statement writing, as well as a fluent API to describe the may of reading a produced ResultSet.
 	</li>
 	<li><em>no attach/detach</em> concept, no first-level cache : because Stalactite doesn&rsquo;t need it at first. One reason for having the
@@ -65,19 +68,19 @@ Stalactite is born after many years of Hibernate usage, with the observation tha
 		Stalactite uses a difference algorithm computation to find those changes. This has a drawback : when updating an entity, the algorithm needs
 		the modified version of the bean, as well as the unmodified version, usually coming from the database (but could be a serialized version of
 		it, with risk of being out of sync with database of course). This implies that Stalactite will load your entity graph when you&rsquo;ll use
-		the update(..) method, this may seems cumbersome but matches the load-update-persist pattern that happens behind the scene of Hibernate too.
+		the update(..) method, this may seem cumbersome but matches the load-update-persist pattern that happens behind the scene of Hibernate too.
 	</li>
 	<li><em>no annotations, requires Java 8 at least</em> : as explained above, annotations are not the expected way to define mapping of
 		entities because they are too intrusive. So the mapping will be done through Java Method References.
 	</li>
-	<li><em>no lazy loading, promote bounded context / small aggregate roots</em> : in order to let developpers assess what they are doing
-		with the database (in term of performance), and avoid lazy exceptions, <em>relations are always fetched</em>. By this way developper
+	<li><em>no lazy loading, promote bounded context / small aggregate roots</em> : in order to let developers assess what they are doing
+		with the database (in terms of performance), and avoid lazy exceptions, <em>relations are always fetched</em>. By this way developer
 		is encouraged to create several aggregates instead of one huge entity graph.
 	</li>
 </ul>
 <p>As a bonus Stalactite <em>doesn&rsquo;t use bytecode enhancement,</em> because it doesn&rsquo;t need to modify given beans nor their
 	collections. But it uses reflection to apply values onto beans.</p>
-<p>As a good pratice, only <code>PreparedStatement</code> are used to avoid SQL Injection. Meanwhile select statement are not totally protected
+<p>As a good practice, only <code>PreparedStatement</code> are used to avoid SQL Injection. Meanwhile, select statement are not totally protected
 	because one can append any kind of Object in the SQL as parameter. So, as a developer, <em>you must care that SQL queries don&rsquo;t
 		concatenate unprotected sources</em>.</p>
 <section class="hint danger">

@@ -9,7 +9,7 @@
 <p>An example of a simple (even basic) implementation of those methods would be a <code>boolean</code> stored in entity class, but one may also
 	implement it through some cache.</p>
 <p>Please note that Stalactite will also invoke the second method right after entity loading to take into account transient state management systems.
-	Hence an implementation based on HTTP request life cycle is possible, as well as a transient <code>boolean</code> field in the entity (as
+	Hence, an implementation based on HTTP request life cycle is possible, as well as a transient <code>boolean</code> field in the entity (as
 	mentioned above).</p>
 <p>Here is an example with state stored on entity :</p>
 <pre><code class="language-java">MappingEase.entityBuilder(Car.class, long.class)

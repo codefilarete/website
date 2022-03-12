@@ -3,7 +3,7 @@
 <p>In this chapter you&rsquo;ll get a persister per child class, hence you can&rsquo;t load all children entities of a mapped super class at once :
 	for that see polymorphism.</p>
 </section>
-<p>Stalactite supports 2 types of non polymorphic inheritance :</p>
+<p>Stalactite supports 2 types of non-polymorphic inheritance :</p>
 <ul>
 	<li>mapped super class, that only centralizes mapped properties, not id policy</li>
 	<li>inheritance aimed at defining id policy</li>
@@ -11,7 +11,7 @@
 <h3 id="mapped-super-class">Mapped super class</h3>
 <p>To avoid describing several times same persistence mapping of a common parent class, you can describe it through an &ldquo;embeddable&rdquo;
 	mapping and reference it in children classes mapping thanks to the <code>mapSuperClass(..)</code> method. Since this way of doing is just for
-	skipping repeation of common mapping, it is not possible to define target table of super class as well as its persistence policy : both are only
+	skipping repetition of common mapping, it is not possible to define target table of super class as well as its persistence policy : both are only
 	done by children classes.</p>
 <p>As an example, we can have a <code>Vehicle</code>class inherited by <code>Car</code>and <code>Truk</code>: <code>Car</code>s will be stored in the
 	<code>Car</code>table with all its data, and <code>Truk</code>s will have its own stored in the <code>Truk</code>table, independently. Such a
@@ -37,7 +37,7 @@ MappingEase.entityBuilder(Truk.class, Long.class)
 <h3 id="inheritance-to-define-identifier-policy">Inheritance to define identifier policy</h3>
 <p>As a difference with mapped super class, hereafter the shared parent mapping defines id policy. This inheritance is declared by the <code>mapInheritance(..)</code>
 	method.</p>
-<p>Here is a simple exemple where a configuration defines mapped properties of <code>Vehicle</code> class, as well as its identifier policy, then the
+<p>Here is a simple example where a configuration defines mapped properties of <code>Vehicle</code> class, as well as its identifier policy, then the
 	<code>Car</code> class can benefit of it.</p>
 <pre><code class="language-java">EntityMappingConfiguration&lt;Vehicle, Long&gt; inheritanceConfiguration = MappingEase
       .entityBuilder(Vehicle.class, Long.class)

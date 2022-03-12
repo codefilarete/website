@@ -1,5 +1,5 @@
 <h2 id="default-mapped-types">Default mapped types</h2>
-<p>Dialects define the way simple types, meaning having only one value, are mapped onto a column. So, for it we needs 2 things : </p>
+<p>Dialects define the way simple types, meaning having only one value, are mapped onto a column. So, for it we need 2 things : </p>
 <ul>
 	<li>a column SQL type, only required for database schema generation</li>
 	<li>the way the column can be read and written, respectively from a ResultSet and a Statement</li>
@@ -11,7 +11,7 @@
 <pre><code class="language-java">Dialect myDialect = new Dialect();
 myDialect.getSqlTypeRegistry().put(AtomicInteger.class, &quot;integer&quot;);
 </code></pre>
-<p>You can do the same but exceptionnaly for a Column :</p>
+<p>You can do the same but exceptionally for a Column :</p>
 <pre><code class="language-java">Dialect myDialect = new Dialect();
 Table myTable = new Table(&quot;myTable&quot;);
 Column&lt;Table, AtomicInteger&gt; myAtomicColumn = myTable.addColumn(&quot;counter&quot;, AtomicInteger.class);
@@ -24,10 +24,10 @@ myDialect.getSqlTypeRegistry().put(myAtomicColumn, &quot;integer&quot;);
 	be <a href="#registering-its-own-dialect">registered</a>. </p>
 </section>
 <section class="hint info">
-<p>As a reminder, don&rsquo;t forget that defining SQL types is only necessary for schema generation. Hence it is not required if you don&rsquo;t use
+<p>As a reminder, don&rsquo;t forget that defining SQL types is only necessary for schema generation. Hence, it is not required if you don&rsquo;t use
 	Stalactite for schema generation. </p>
 </section>
-<h3 id="specifying-how-to-read-an-write-types">Specifying how to read an write types</h3>
+<h3 id="specifying-how-to-read-an-write-types">Specifying how to read and write types</h3>
 <p>It can be interesting to be able to specify a particular way of reading and writing a simple Java type if you need to adapt it (for compatibility
 	with an RDBMS or business rule reason). To do it you must access the <code>ColumnBinderRegistry</code> by using <code>dialect.getColumnBinderRegistry()</code>,
 	then you&rsquo;ll use <code>register(..)</code> methods that either takes a <code>Class</code> or a <code>Column</code> as first argument (to

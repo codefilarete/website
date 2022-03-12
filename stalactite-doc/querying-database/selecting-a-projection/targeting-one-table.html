@@ -25,7 +25,7 @@ Column&lt;Table, Integer&gt; ageColumn = personTable.addColumn(&quot;age&quot;, 
 List&lt;Person&gt; persons = persistenceContext.select(Person::new, idColumn, nameColumn, ageColumn);
 </code></pre>
 <h3 id="filling-beans-outside-of-constructor">Filling beans outside of constructor</h3>
-<p>Some methods whose signatures are close to above ones are available with an extra parameter that allows bean properties fullfilment outside of
+<p>Some methods whose signatures are close to above ones are available with an extra parameter that allows bean properties fulfillment outside of
 	constructor : an extra Consumer argument lets you add Columns and consume them. Here is an example :</p>
 <pre><code class="language-java">// Supposing a Person class with a 1-arg constructor and 2 properties 'name' and 'age' with their respective setter
 Table personTable = new Table(&quot;Person&quot;);
