@@ -1,4 +1,3 @@
-<h1>Stalactite introduction</h1>
 <h2>What is it ?</h2>
 Stalactite aims at being an ORM, but also gives some tools to ease JDBC usage : trying to be an ORM as a framework, but with some modules that
 helps to create CRUD SQL statements for Objects.
@@ -36,18 +35,14 @@ Moreover, it comes with the observation that teams hardly master the framework e
 	example :
 	<ul>
 		<li>in a Domain Driven Design project, where Domain must be framework-agnostic, annotations are a problem. To overcome this problem a copy of
-			Domain entities can be introduced in persistence module to get a Persistence Domain, helped by a one-one mapper, this introduces
-			duplicates
+			Domain entities can be introduced in persistence module to get a Persistence Domain, helped by a one-one mapper, this introduces duplicates
 			and boilerplate code. Worth mentioning that bidirectionality between some entity can be quite complex to solve by the mapper.
 		</li>
-		<li>quickly persisting some data coming from a Controller is not possible before mapping them to entity, which will produce boilerplate code
-			or
+		<li>quickly persisting some data coming from a Controller is not possible before mapping them to entity, which will produce boilerplate code or
 			reflection overhead.
 		</li>
-		<li>as long as your project rises in features, and produces relations between entities, the trend brings to obtain a huge entity graph if no
-			one
-			takes care of it, because it&rsquo;s very hard to quickly see what&rsquo;s going to be loaded or not with annotations. Then performance
-			for
+		<li>as long as your project rises in features, and produces relations between entities, the trend brings to obtain a huge entity graph if no one
+			takes care of it, because it&rsquo;s very hard to quickly see what&rsquo;s going to be loaded or not with annotations. Then performance for
 			loading it may become a problem, as well as modifying it.
 		</li>
 	</ul>
@@ -59,9 +54,9 @@ Moreover, it comes with the observation that teams hardly master the framework e
 <h2 id="disclaimer">Disclaimer</h2>
 <p>In order to fulfill its goal (having an ORM less complex than Hibernate, with non-intrusive mapping), some choices were made that may hardly change :</p>
 <ul>
-	<li><em>no query language</em> such as HQL/JPQL : because it&rsquo;s perfomance consuming while parsing the text, and because it&rsquo;s
+	<li><em>no query language</em> such as HQL/JPQL : because it&rsquo;s performance consuming while parsing the text, and because it&rsquo;s
 		time consuming by its complexity for a developer which wants to implement such a project ! For now a fluent API is available for CRUD SQL
-		statement writing, as well as a fluent API to describe the may of reading a produced ResultSet.
+		statement writing, as well as a fluent API to describe the way of reading a produced ResultSet.
 	</li>
 	<li><em>no attach/detach</em> concept, no first-level cache : because Stalactite doesn&rsquo;t need it at first. One reason for having the
 		attach concept is to get an easy way to audit changes on entities, so the system can know which modifications should be sent to the database.

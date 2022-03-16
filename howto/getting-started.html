@@ -1,0 +1,87 @@
+<h2>Installation</h2>
+To use Stalactite in your project you’ll have to put it as a dependency:
+<pre><code class="language-xml"><dependency>
+    <groupId>org.codefilarete.stalactite</groupId>
+    <artifactId>orm</artifactId>
+    <version>${stalactite.version}</version>
+</dependency>
+</code></pre>
+
+You’ll also have to add the dependency to Stalactite database adapter module, according to the databases you use in your project (as a reminder Stalactite supports ….). Here is an example with HSQLDB :
+<pre><code class="language-xml"><dependency>
+    <groupId>org.codefilarete.stalactite</groupId>
+    <artifactId>core-hsqldb-adapter</artifactId>
+    <version>${stalactite.version}</version>
+</dependency>
+</code></pre>
+
+Finally, if you use Stalactite integrated in a Spring project which manages your transactions, you’ll have to add the following dependency to make Stalactite use them
+<pre><code class="language-xml"><dependency>
+    <groupId>org.codefilarete.stalactite</groupId>
+    <artifactId>spring-integration</artifactId>
+    <version>${stalactite.version}</version>
+</dependency>
+</code></pre>
+
+
+
+<h2>Declaring your mapping</h2>
+The entry point to configure your persistence mapping is MappingEase static methods, such as entityBuilder(entityClass, identifierClass). So you start with such piece of code:
+<pre><code class="language-java">MappingEase.entityBuilder(Country.class, long.class)
+</code></pre>
+
+Then you can follow by mapping the key of your entity by fluently following previous code. Different identifier generators are available in the IdentifierPolicy class, here we’ll say that the database will give one for us :
+<pre><code class="language-java">MappingEase.entityBuilder(Country.class, long.class)
+    .mapKey(Country::getId, IdentifierPolicy.afterInsert())
+</code></pre>
+
+Let’s continue by mapping some properties by using the map(..) methods :
+<pre><code class="language-java">MappingEase.entityBuilder(Country.class, long.class)
+    .mapKey(Country::getId, IdentifierPolicy.afterInsert())
+    .map(Country::getName)
+    .map(Country::getDescription)
+</code></pre>
+
+<h2>First persistence</h2>
+The <code>MappingEase.entityBuilder(..)</code> method will let you chain with the <code>build(PersistenceContext)</code> method to obtain an <code>EntityPersister</code>,
+which is the entry point to persist your entities. So, at first you have to declare a <code>PersistenceContext</code> with your database connectivity :
+<pre><code class="language-java">DataSource dataSource = ... // use whatever JDBC DataSource you want
+PersistenceContext persistenceContext = new PersistenceContext(dataSource);
+</code></pre>
+
+<section class="hint info">
+    <header>Spring integration</header>
+    Note that if you use Spring you’ll have to replace <code>DataSource</code> by a <code>JpaConnectionProvider</code> (or any adhoc one from
+    <code>spring-integration</code> module) that takes your <code>Spring PlatformTransactionManager</code> as argument. Remember that you should
+    have added the necessary dependency (see above).
+</section>
+
+So finally you get the following :
+
+<pre><code class="language-java">DataSource dataSource = ... // use whatever JDBC DataSource you want
+PersistenceContext persistenceContext = new PersistenceContext(dataSource);
+EntityPersister&lt;Country, Long> countryPersister = MappingEase.entityBuilder(Country.class, long.class)
+    .mapKey(Country::getId, IdentifierPolicy.afterInsert())
+    .map(Country::getName)
+    .map(Country::getDescription)
+    .build(persistenceContext);
+
+Country country = new Country();
+countryPersister.persist(country);
+</code></pre>
+
+<code>EntityPersister.persist(..)</code> insert or update your entity according to its persistence state (with <code>IdentifierPolicy.afterInsert()</code>
+it only depends on an id presence on your entity). You may also decide by yourself what action to do since <code>insert(..)</code> and <code>update(..)</code>
+methods (and many more) are available.
+
+<h2>Deploying your tables</h2>
+You may need to deploy your schema, especially for testing purposes. For that you can take benefit from <code>DDLDeployer</code> class, it’s quick simple at first glance :
+<pre><code class="language-java">DDLDeployer ddlDeployer = new DDLDeployer(persistenceContext);
+ddlDeployer.deployDDL();
+</code></pre>
+
+Note that it doesn’t manage schema differences, hence it’s not a production tool to upgrade your schema.
+
+<h2>Conclusion</h2>
+We saw how to quickly use Stalactite ORM, from declaring its persistence connectivity to deploying the schema and, overall, mapping your entities.
+But it contains many more things like relation handling, exporting projections, versioning, etc. Feel free to <a href="../stalactite-doc">read the documentation !</a>

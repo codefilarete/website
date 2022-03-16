@@ -5,7 +5,7 @@ pre.rainbow-show {
 	margin: 1em;
 	border-radius: 5px;
 }
-pre.rainbow-show, code.language-java {
+pre.rainbow-show, code.language-java, code.language-xml {
 	background-color: #7A7A7A;
 	font-size: 1em;
 	font-family: Consolas, 'Liberation Mono', Courier, monospace;
