@@ -50,3 +50,9 @@ body {
 	padding-right: 1em;
 	background-color: gainsboro;
 }
+
+.article-container {
+	grid-template-columns: repeat(1, 1fr);
+	display: grid;
+	max-width: 60%;
+}
