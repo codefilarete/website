@@ -1,5 +1,3 @@
-@import "slideshow-transition.css";
-
 .slideshow {
 	display: grid;
 	justify-items: center;

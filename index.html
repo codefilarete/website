@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en-US">
 <head>
 	<title>Code Filarete</title>
@@ -9,6 +10,21 @@
 	<link rel="icon" type="image/png" sizes="32x32" href="asset/icon/favicon/favicon-32x32.png">
 	<link rel="icon" type="image/png" sizes="16x16" href="asset/icon/favicon/favicon-16x16.png">
 	<link rel="manifest" href="asset/icon/favicon/site.webmanifest">
+	<link rel="stylesheet" href="asset/js/splide/css/splide.min.css">
+	<script src="asset/js/splide/js/splide.min.js"></script>
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			let splide = new Splide('.splide', {
+				type: 'fade',
+				rewind: true,
+				autoplay: true,
+				interval: 5000,
+				speed: 1000,
+				easing: "cubic-bezier(0.42, 0.0, 0.58, 1.0)"
+			});
+			splide.mount();
+		});
+	</script>
 </head>
 <body>
 <p>
@@ -42,8 +58,10 @@
 	</dl>
 </nav>
 </div>
-<ul class="slideshow">
-	<li class="slide">
+<div class="splide" role="group">
+<div class="splide__track">
+<ul class="slideshow splide__list">
+	<li class="slide splide__slide">
 		<img src="https://c.pxhere.com/photos/07/b1/icicles_frozen_cold_snow_winter_icy_bird_feeder_hanging-1008084.jpg!d">
 		<article>
 			<header><span style="font-family: Licorice, sans-serif;font-size: 4em;">Stalactite</span><span style="font-size: 2em;">&nbsp;&nbsp;ORM</span></header>
@@ -52,7 +70,7 @@
 			</p>
 		</article>
 	</li>
-	<li class="slide">
+	<li class="slide splide__slide">
 		<img src="https://c.pxhere.com/photos/22/c8/caverns_rock_formation_cave_rock_stone_geology_landscape_tourism-858747.jpg!d">
 		<article>
 			<header>Non intrusive mapping</header>
@@ -61,7 +79,7 @@
 			</p>
 		</article>
 	</li>
-	<li class="slide">
+	<li class="slide splide__slide">
 		<img src="https://c.pxhere.com/images/e7/c7/70b68752d4cfcbcba01cf43760bd-1617711.jpg!d">
 		<article>
 			<header>Visualize entity graph</header>
@@ -81,7 +99,7 @@ entityBuilder(Person.class, long.class)
 			</p>
 		</article>
 	</li>
-	<li class="slide">
+	<li class="slide splide__slide">
 		<img src="https://c.pxhere.com/photos/5b/e2/photo-24358.jpg!d">
 		<article>
 			<header>Keep your domain clean</header>
@@ -95,6 +113,8 @@ entityBuilder(Person.class, long.class)
 		</article>
 	</li>
 </ul>
+</div>
+</div>
 <div class="article-container">
 	<article>
 		<header>Non intrusive mapping</header>
