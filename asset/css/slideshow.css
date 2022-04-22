@@ -4,7 +4,6 @@
 	display: grid;
 	justify-items: center;
 	align-items: center;
-	
 }
 
 .slideshow > * {
@@ -12,12 +11,12 @@
 	grid-row-start: 1;
 }
 
-/* Making slieshow content overlap their background image, else they are side-by-side */
+/* Making slideshow content overlap their background image, else they are side-by-side */
 .slideshow .slide {
 	position: relative;
 }
 
-/* Centering articles and images in slideshow container without overflowing */
+/* Centering articles and images in slideshow container without overflow */
 .slideshow .slide > img, .slideshow .slide > article {
 	position: absolute;
 	top: 50%; left: 50%;
@@ -41,9 +40,8 @@
 	border-bottom: 1px solid lightgrey;
 }
 
-
 .slideshow .slide {
-	height: 500px;
+	height: 400px;
 	width: 100%;
 	overflow: hidden;
 }

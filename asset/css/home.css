@@ -27,7 +27,6 @@ a {
 	padding: 5px 40px;
 	
 	background-color: #33aec1;
-	text-shadow: -2px 2px 2px black;
 }
 
 @media screen and (min-width: 800px) {
@@ -48,12 +47,15 @@ a {
 		top: 60px;
 		right: -60px;
 		transform: rotate(45deg);
-		box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.8);
 
 		padding-top: 0px;
 		padding-bottom: 0px;
 		border-bottom: 1px solid black;
 		border-top: 1px solid black;
+	}
+	
+	#forkongithub  .github-logo {
+		vertical-align: middle;
 	}
 }
 
@@ -65,6 +67,7 @@ a {
 #site_nav > dl {
 	display: flex;
 	justify-content: right;
+	column-gap: 1em;
 }
 
 #site_nav dt {
@@ -85,21 +88,21 @@ a {
 .article-container {
 	display: grid;
 	grid-template-columns: repeat(2, 1fr);
-	grid-gap: 40px;
+	grid-gap: 20px;
 }
 
 .article-container > article {
-	background-color: #b2b2b2;
+	background-color: #ecebeb;
 	padding: 10px
 }
 
 .article-container > article header {
 	padding-bottom: 20px; /* Some padding */
-	font-size: 2em;
+	font-size: 1.8em;
 }
 
 .article-container > article p, .article-container > article li {
-	font-size: 1.2em;
+	font-size: 1.1em;
 }
 
 .article-container > article li {
