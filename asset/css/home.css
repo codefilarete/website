@@ -102,8 +102,9 @@ a {
 	font-size: 1.8em;
 }
 
-.article-container > article p, .article-container > article li {
+.article-container > article p, .article-container > article ul {
 	font-size: 1.1em;
+	margin-bottom: 0;
 }
 
 .article-container > article li {
@@ -129,6 +130,13 @@ a {
 .article-container > article em {
 	font-weight: bold;
 	font-style: normal;
+}
+
+#Thanks {
+	text-align: center;
+	margin: 20px 0 20px 0;
+	padding: 10px;
+	background-color: #ecebeb;
 }
 
 footer {
