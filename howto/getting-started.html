@@ -1,24 +1,24 @@
 <h2>Installation</h2>
 To use Stalactite in your project you’ll have to put it as a dependency:
 <pre><code class="language-xml"><dependency>
-    <groupId>org.codefilarete.stalactite</groupId>
-    <artifactId>orm</artifactId>
+    &lt;groupId&gt;org.codefilarete.stalactite&lt;/groupId&gt;
+    &lt;artifactId&gt;orm&lt;/artifactId&gt;
     <version>${stalactite.version}</version>
 </dependency>
 </code></pre>
 
 You’ll also have to add the dependency to Stalactite database adapter module, according to the databases you use in your project (as a reminder Stalactite supports ….). Here is an example with HSQLDB :
 <pre><code class="language-xml"><dependency>
-    <groupId>org.codefilarete.stalactite</groupId>
-    <artifactId>core-hsqldb-adapter</artifactId>
+    &lt;groupId&gt;org.codefilarete.stalactite&lt;/groupId&gt;
+    &lt;artifactId&gt;core-hsqldb-adapter&lt;/artifactId&gt;
     <version>${stalactite.version}</version>
 </dependency>
 </code></pre>
 
 Finally, if you use Stalactite integrated in a Spring project which manages your transactions, you’ll have to add the following dependency to make Stalactite use them
 <pre><code class="language-xml"><dependency>
-    <groupId>org.codefilarete.stalactite</groupId>
-    <artifactId>spring-integration</artifactId>
+    &lt;groupId&gt;org.codefilarete.stalactite&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-integration&lt;/artifactId&gt;
     <version>${stalactite.version}</version>
 </dependency>
 </code></pre>
