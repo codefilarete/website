@@ -13,8 +13,8 @@
 	mapping and reference it in children classes mapping thanks to the <code>mapSuperClass(..)</code> method. Since this way of doing is just for
 	skipping repetition of common mapping, it is not possible to define target table of super class as well as its persistence policy : both are only
 	done by children classes.</p>
-<p>As an example, we can have a <code>Vehicle</code>class inherited by <code>Car</code>and <code>Truk</code>: <code>Car</code>s will be stored in the
-	<code>Car</code>table with all its data, and <code>Truk</code>s will have its own stored in the <code>Truk</code>table, independently. Such a
+<p>As an example, we can have a <code>Vehicle</code>class inherited by <code>Car</code>and <code>Truck</code>: <code>Car</code>s will be stored in the
+	<code>Car</code>table with all its data, and <code>Truck</code>s will have its own stored in the <code>Truck</code>table, independently. Such a
 	mapping can be defined as this :</p>
 <pre><code class="language-java">FluentEmbeddableMappingBuilder&lt;Vehicle&gt; vehiclePersistenceConfigurer =
     MappingEase.embeddableBuilder(Vehicle.class)
@@ -27,10 +27,10 @@ MappingEase.entityBuilder(Car.class, Long.class)
 	.mapSuperClass(vehiclePersistenceConfigurer)
 	.build(persistenceContext);
 	
-MappingEase.entityBuilder(Truk.class, Long.class)
+MappingEase.entityBuilder(Truck.class, Long.class)
 	// concrete class defines id
-	.mapKey(Truk::getId, IdentifierPolicy.afterInsert())
-	.map(Truk::getEngine)
+	.mapKey(Truck::getId, IdentifierPolicy.afterInsert())
+	.map(Truck::getEngine)
 	.mapSuperClass(vehiclePersistenceConfigurer)
 	.build(persistenceContext);
 </code></pre>
