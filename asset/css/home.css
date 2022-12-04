@@ -30,32 +30,8 @@ a {
 }
 
 @media screen and (min-width: 800px) {
-	#forkongithub {
-		display: block;
-		position: fixed;
-		top: 0;
-		right: 0;
-		width: 200px;
-		height: 200px;
-		overflow: hidden;
-		z-index: 9999;
-	}
-	
-	#forkongithub a {
-		width: 200px;
-		position: absolute;
-		top: 60px;
-		right: -60px;
-		transform: rotate(45deg);
-
-		padding-top: 0px;
-		padding-bottom: 0px;
-		border-bottom: 1px solid black;
-		border-top: 1px solid black;
-	}
-	
-	#forkongithub  .github-logo {
-		vertical-align: middle;
+	body {
+		margin: 10px;
 	}
 }
 
@@ -68,11 +44,17 @@ a {
 	display: flex;
 	justify-content: right;
 	column-gap: 1.6em;
+	margin-top: 25px;
 }
 
 #site_nav dt {
 	padding: 0;
 	text-transform: uppercase;
+}
+
+#site_nav a {
+	color: black;
+	font-weight: bold;
 }
 
 #site_nav dt::first-letter {
