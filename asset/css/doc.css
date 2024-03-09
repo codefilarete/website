@@ -163,7 +163,7 @@ section .hint {
 	border-radius: 5px;
 	border-left-style: solid;
 	border-left-width: 3px;
-	background-color: darkgray;
+	background-color: #eaeaea;
 	margin: 1em;
 	padding: 0.5em;
 }
@@ -191,26 +191,26 @@ section .hint header:first-child {
 }
 
 section .info {
-	border-left-color: blue;
+	border-left-color: #0081f5;
 }
 section .info > *:first-child::before {
 	content: "\e901";
-	color : blue;
+	color : #0081f5;
 }
 
 section .success {
-	border-left-color: green;
+	border-left-color: #50d150;
 }
 section .success > *:first-child::before {
 	content: "\e900";
-	color : green;
+	color : #50d150;
 }
 section .warn {
-	border-left-color: orange;
+	border-left-color: #ffbf00;
 }
 section .warn > *:first-child::before {
 	content: "\e903";
-	color : orange;
+	color : #ffbf00;
 }
 section .danger {
 	border-left-color: red;
