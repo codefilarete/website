@@ -1,0 +1,153 @@
+<h3 id="complex-projection">Complex projection</h3>
+<section class="hint info">
+<p>Following explanations will use example of a query created through simple <code>String</code>s, please note that all methods mentioned below also
+	exist with a signature accepting <code>Query</code> object which can be build thanks to a fluent API starting with
+	<code>QueryEase.select(..)</code>. </p>
+</section>
+<h4 id="from-an-sql-statement">From an SQL statement</h4>
+<p>An object can be created from a simple SQL query thanks to the <code>PersistenceContext#newQuery(CharSequence, Class)</code> method. The first
+	argument contains the SQL to be executed, and the second is the type of bean built by the execution of the query. Then one can map selected
+	columns to object properties through method references :\</p>
+<pre><code class="language-java">persistenceContext.newQuery(&quot;select name, isoCode from Country&quot;, Country.class)
+    .mapKey(Country::new, "name")
+    .map(&quot;isoCode&quot;, Country::setIsoCode)
+    .execute();
+</code></pre>
+<p>By default the property type will be used to read <code>ResultSet</code> column, but if the column type doesn’t really match the bean property one
+	then we can enforce it by giving the type to use as an extra <code>map(..)</code> method parameter such as below. This will tell Stalactite to use
+	the matching-type <code>ResultSetReader</code> configured at the <code>Dialect</code> level.</p>
+<pre><code class="language-java">persistenceContext.newQuery(&quot;select name, inhabitantCount, isoCode from Country&quot;, Country.class)
+    .mapKey(Country::new, "name")
+    .map(&quot;inhabitantCount&quot;, Country::setInhabitantCount, long.class)
+    .map(&quot;isoCode&quot;, Country::setIsoCode)
+    .execute();
+</code></pre>
+<p>At last, if some conversion needs to be done, you can specify it with some extra arguments to the <code>map(..)</code> method : the first extra one
+	is the Java type for the column to be read, and the second extra one is the converter. It will get the column value as input and its result will
+	be given to the method :</p>
+<pre><code class="language-java">persistenceContext.newQuery(&quot;select name, nuclearWeaponCount, isoCode from Country&quot;, Country.class)
+    .mapKey(Country::new, "name")
+    .map(&quot;nuclearWeaponCount&quot;, Country::setHasNuclearWeapon, int.class, weaponCount -&gt; weaponCount &gt; 0)
+    .map(&quot;isoCode&quot;, Country::setIsoCode)
+    .execute();
+</code></pre>
+<h4 id="setting-request-parameter">Setting request parameter</h4>
+<p>Of course one can give parameters to the query and set them through <code>set(..)</code> methods. Parameters are named (not indexed) and must be
+	prefixed by “:” in SQL, such as below :</p>
+<pre><code class="language-java">persistenceContext.newQuery(&quot;select name, isoCode from Country where isoCode = :code&quot;, Country.class)
+	.mapKey(Country::new, "name")
+    .set(&quot;code&quot;, &quot;FR&quot;)
+    .singleResult()
+    .execute();
+</code></pre>
+<section class="hint warn">
+<p>Note that Stalactite will detect parameters and transform SQL as a <code>PreparedStatement</code> to avoid SQL injection. Meanwhile, parameter
+	detection is a kind of “simple and stupid” algorithm and won’t take all cases into account for now. </p>
+</section>
+<h4 id="bean-constructor-usage">Bean constructor usage</h4>
+<p>Stalactite also supports multiple-args constructor, supposing that <code>Country</code> has a 3-args constructor you can write :</p>
+<pre><code class="language-java">persistenceContext.newQuery(&quot;select id, name, isoCode from Country&quot;, Country.class)
+    .mapKey(Country::new , &quot;id&quot;, long.class, “name”, String.class, “isoCode”, String.class)
+    .execute();
+</code></pre>
+<p>Furthermore, since first argument of <code>mapKey(..)</code> methods is a <code>Function</code>, factory method pattern is also supported: supposing
+	that <code>Country</code> only exposes a static factory method called “fromDatabase” and not its private constructors, we can use it as well :</p>
+<pre><code class="language-java">persistenceContext.newQuery(&quot;select id, name, isoCode from Country&quot;, Country.class)
+    .mapKey(Country::fromDatabase, &quot;id&quot;, long.class, “name”, String.class, “isoCode”, String.class)
+    .execute();
+</code></pre>
+<section class="hint success">
+<p>Actually, thanks to the latter case, any factory method can be used, whether it is exposed by the entity class itself or not. </p>
+</section>
+<section class="hint warn">
+<p>When multiple constructors are present in entity class, due to method reference detection by Java, you may have to cast given constructor reference
+	as the right one else a compilation error will be raised : </p>
+	<pre><code class="language-java">persistenceContext.newQuery(&quot;select id, name, isoCode from Country&quot;, Country.class)
+    .mapKey( (SerializableFunction&lt;Long, Country&gt;) Country::new, &quot;id&quot;, long.class)
+    .map(&quot;name&quot;, Country::setName)
+    .map(&quot;isoCode&quot;, Country::setIsoCode)
+    .execute();
+</code></pre>
+</section>
+
+<h4 id="using-a-table-metamodel">Using a table metamodel</h4>
+<p>As an architecture strategy, a project may decide to expose its Database model as a metamodel, this has several benefits if you write it with
+	Stalactite <code>Table</code>s and<code>Column</code>s, in particular a query can be mapped to bean properties by using <code>Column</code>s.
+	Supposing the project defines a <code>CountryTable</code> class which is a <code>Table</code> class with accessible <code>Column</code> as
+	instance field. One can write following code :</p>
+<pre><code class="language-java">CountryTable countryTable = new CountryTable();
+persistenceContext.newQuery(&quot;select id, name, isoCode from Country&quot;, Country.class)
+    .mapKey(Country::new , countryTable.id)
+    .map(countryTable.name, Country::setName)
+    .map(countryTable.isoCode, Country::setIsoCode)
+    .execute();
+</code></pre>
+<p>This way of writing ensures that your bean properties match column types since method signatures are made for it.</p>
+<p>Moreover you can combine it with fluent API select clause writing to obtain a very refactor-proof query :</p>
+<pre><code class="language-java">CountryTable countryTable = new CountryTable();
+persistenceContext.newQuery(QueryEase.select(countryTable.id, countryTable.name, countryTable.isoCode).from(countryTable), Country.class)
+    .mapKey(Country::new , countryTable.id)
+    .map(countryTable.name, Country::setName)
+    .map(countryTable.isoCode, Country::setIsoCode)
+    .execute();
+</code></pre>
+<h4 id="returning-one-row">Returning one row</h4>
+<p>For very simple cases one can expect the request to return only one row, therefore the query should not return a <code>List</code> but a single
+	<code>Object</code> or <code>null</code>. To get such a behavior, just call <code>singleResult()</code> during mapping :</p>
+<pre><code class="language-java">int countryCount = persistenceContext.newQuery(&quot;select count(*) as countryCount from Country&quot;, int.class)
+    .mapKey(&quot;countryCount&quot;, int.class)
+    .singleResult()
+    .execute();
+</code></pre>
+<h4 id="building-a-complex-model">Building a complex model</h4>
+<p>The query API lets also build a graph by attaching related beans to the root one through its accessor methods and a
+	<code>ResultSetRowTransformer</code> that will manage related bean construction. Note that accessor methods will be abstracted through a
+	BeanRelationFixer, so one can benefit from its available static methods to, for example, manage bidirectionality.</p>
+<h5 id="to-one-relation">To-one relation</h5>
+<pre><code class="language-java">persistenceContext.newQuery(
+			&quot;select Country.id as countryId, Country.name as countryName, Country.isoCode, City.id as cityId, City.name as cityName
+			 from Country inner join City on Country.capitalId = City.id&quot;, Country.class)
+    .mapKey(Country::new , &quot;id&quot;, long.class)
+    .map(&quot;countryName&quot;, Country::setName)
+    .map(&quot;isoCode&quot;, Country::setIsoCode)
+    .map(BeanRelationFixer.of(Country::setCapital), new ResultSetRowTransformer&lt;&gt;(City.class, "cityId", DefaultResultSetReaders.LONG_PRIMITIVE_READER, City::new))
+    .execute();
+</code></pre>
+<h5 id="to-many-relation">To-many relation</h5>
+<p>Attaching a collection to a root bean will use same method as to-one relation : since its first argument is a combiner of 2 beans we must create a
+	smart one that will check collection presence and add related bean, whereas passed <code>ResultSetRowTransformer</code> remains a bean creator as
+	mentioned for to-one relation.</p>
+<pre><code class="language-java">// Note that code below is equivalent to BeanRelationFixer.of(Country::setCities, Country::getCities, HashSet::new)
+BeanRelationFixer&lt;Country, City&gt; cityCountryCombiner = (country, city) -&gt; {
+    if (country.getCities() == null) {
+	country.setCities(new HashSet&lt;&gt;());
+    }
+    country.getCities().add(city);
+};
+
+
+persistenceContext.newQuery(
+			&quot;select Country.id as countryId, Country.name as countryName, Country.isoCode, City.id as cityId, City.name as cityName
+			 from Country inner join City on Country.capitalId = City.id&quot;, Country.class)
+    .mapKey(Country::new , &quot;id&quot;, long.class)
+    .map(&quot;countryName&quot;, Country::setName)
+    .map(&quot;isoCode&quot;, Country::setIsoCode)
+    .map(cityCountryCombiner, new ResultSetRowTransformer&lt;&gt;(City.class, "cityId", DefaultResultSetReaders.LONG_PRIMITIVE_READER, City::new))
+    .execute();
+</code></pre>
+<h4 id="very-open-mapping">Very open mapping</h4>
+<p>If you don’t find the appropriate method to build your result, one may finally consume the read <code>ResultSet</code> thanks to a very open <code>map(..)</code>
+	method signature that gets a consumer of root bean and <code>ResultSet</code> :</p>
+<pre><code class="language-java">persistenceContext.newQuery(
+			&quot;select Country.id as countryId, Country.name as countryName, Country.isoCode, City.id as cityId, City.name as cityName
+			 from Country inner join City on Country.capitalId = City.id&quot;, Country.class)
+    .mapKey(Country::new , &quot;id&quot;, long.class)
+    .map(&quot;countryName&quot;, Country::setName)
+    .map(&quot;isoCode&quot;, Country::setIsoCode)
+    .map((rootBean, resultSet) -&gt; {
+            City city = new City(resultSet.getLong("cityId"));
+            city.setName(resultSet.getString("cityName"));
+            rootBean.setCity(city);
+        })
+    .execute();
+</code></pre>

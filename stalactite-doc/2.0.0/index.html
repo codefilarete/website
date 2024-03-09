@@ -3,11 +3,11 @@
 <head>
 	<title>Stalactite documentation</title>
 	<meta name="Keywords" content="Java ORM architecture CQRS Hibernate JPA method-reference">
-	<link href="../asset/css/doc.css" rel="stylesheet"/>
-	<script src="../asset/rainbow-custom.min.js">
+	<link href="../../asset/css/doc.css" rel="stylesheet"/>
+	<script src="../../asset/rainbow-custom.min.js">
 		Rainbow.defer = true;
 	</script>
-	<link rel="stylesheet" href="../asset/rainbow-doc.css">
+	<link rel="stylesheet" href="../../asset/rainbow-doc.css">
 	<link rel="apple-touch-icon" sizes="180x180" href="asset/icon/favicon/apple-touch-icon.png">
 	<link rel="icon" type="image/png" sizes="32x32" href="asset/icon/favicon/favicon-32x32.png">
 	<link rel="icon" type="image/png" sizes="16x16" href="asset/icon/favicon/favicon-16x16.png">
@@ -15,13 +15,17 @@
 </head>
 <body>
 <header id="welcome">
-	<a href="..">
-		<img src="../asset/icon/favicon/favicon-blue.svg" width="50px" alt="Code-filarete home"/>
+	<a href="../..">
+		<img src="../../asset/icon/favicon/favicon-blue.svg" width="50px" alt="Code-filarete home"/>
 	</a>
-	<span>
+	<h1>
 		<img src="asset/icon/favicon/stalactite-icon.svg" width="50px" alt="Stalactite icon"/>
-		Welcome to Stalactite documentation !
-	</span>
+		<span>Welcome to Stalactite documentation !</span>
+	</h1>
+	<select onchange="location.assign('../' + this.options[this.selectedIndex].value)">
+		<option selected value="2.0.0">2.0.0 (latest)</option>
+		<option value="1.0.0">1.0.0</option>
+	</select>
 </header>
 <div id="main">
 	<section id="toc"></section>

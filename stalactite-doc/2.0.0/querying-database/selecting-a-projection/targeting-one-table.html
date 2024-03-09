@@ -1,0 +1,58 @@
+<h2 id="targeting-one-table">Targeting one table</h2>
+<h3 id="quickly-building-a-bean-from-one-table">Quickly building a bean from one Table</h3>
+<p>For simple case of building a bean from only one table, Stalactite provides the <code>PersistenceContext.select(..)</code> convenient method :</p>
+<ul>
+	<li>the first argument is your bean factory (constructor or any factory method)</li>
+	<li>other arguments are columns to be appended to the select clause (they are expected to be from same table, no join will be performed).</li>
+</ul>
+<p>The factory (usually your bean constructor) will be given column values, hence its parameters must match <code>Column</code>s Java types. Here is a
+	basic example :</p>
+<pre><code class="language-java">// Supposing a MyBean class with a one-arg constructor
+Table myTable = new Table(&quot;MyTable&quot;);
+Column&lt;Table, Long&gt; idColumn = myTable.addColumn(&quot;id&quot;, long.class);
+List&lt;MyBean&gt; myBeans = persistenceContext.select(MyBean::new, idColumn);
+</code></pre>
+<section class="hint info">
+	<p>Note that one bean per row will be created : at this stage no bean graph will be built. </p>
+</section>
+<p>Of course, if your bean has a constructor with several arguments, some variations of the <code>select(..)</code> method exist with extra <code>Column</code>
+	argument up to 3</p>
+<pre><code class="language-java">// Supposing a Person class with a 3-args constructor
+Table personTable = new Table(&quot;Person&quot;);
+Column&lt;Table, Long&gt; idColumn = personTable.addColumn(&quot;id&quot;, long.class);
+Column&lt;Table, String&gt; nameColumn = personTable.addColumn(&quot;name&quot;, String.class);
+Column&lt;Table, Integer&gt; ageColumn = personTable.addColumn(&quot;age&quot;, int.class);
+List&lt;Person&gt; persons = persistenceContext.select(Person::new, idColumn, nameColumn, ageColumn);
+</code></pre>
+<h3 id="filling-beans-outside-of-constructor">Filling beans outside of constructor</h3>
+<p>Some methods whose signatures are close to above ones are available with an extra parameter that allows bean properties fulfillment outside of
+	constructor : an extra Consumer argument lets you add Columns and consume them. Here is an example :</p>
+<pre><code class="language-java">// Supposing a Person class with a 1-arg constructor and 2 properties 'name' and 'age' with their respective setter
+Table personTable = new Table(&quot;Person&quot;);
+Column&lt;Table, Long&gt; idColumn = personTable.addColumn(&quot;id&quot;, long.class);
+Column&lt;Table, String&gt; nameColumn = personTable.addColumn(&quot;name&quot;, String.class);
+Column&lt;Table, Integer&gt; ageColumn = personTable.addColumn(&quot;age&quot;, int.class);
+List&lt;Person&gt; persons = persistenceContext.select(Person::new,
+                                                 idColumn,
+                                                 select -&gt; select
+                                                      .add(nameColumn, Person::setName)
+                                                      .add(ageColumn, Person::setAge));
+</code></pre>
+<h3 id="filtering-query">Filtering query</h3>
+<p>Possibility to filter table is available as an extra <code>Consumer</code> of <code>CriteriaChain</code> that allows you to chain and / or criteria
+	that will be appended to SQL where clause. Please note that columns should still be the one of same table and select clause (else it would
+	generate an SQL targeting several tables without joining them), as <code>select(..)</code> method focuses on that use case.</p>
+<pre><code class="language-java">// Supposing a Person class with a 1-arg constructor and 2 properties 'name' and 'age' with their respective setter
+Table personTable = new Table(&quot;Person&quot;);
+Column&lt;Table, Long&gt; idColumn = personTable.addColumn(&quot;id&quot;, long.class);
+Column&lt;Table, String&gt; nameColumn = personTable.addColumn(&quot;name&quot;, String.class);
+Column&lt;Table, Integer&gt; ageColumn = personTable.addColumn(&quot;age&quot;, int.class);
+List&lt;Person&gt; persons = persistenceContext.select(Person::new,
+                                                 idColumn,
+                                                 select -&gt; select
+                                                      .add(nameColumn, Person::setName)
+                                                      .add(ageColumn, Person::setAge),
+                                                 where -&gt; where
+                                                      .and(nameColumn, Operators.startsWith(&quot;Bob&quot;))
+                                                      .and(ageColumn, Operators.gt(30)));
+</code></pre>

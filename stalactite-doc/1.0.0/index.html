@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+	<title>Stalactite documentation</title>
+	<meta name="Keywords" content="Java ORM architecture CQRS Hibernate JPA method-reference">
+	<link href="../../asset/css/doc.css" rel="stylesheet"/>
+	<script src="../../asset/rainbow-custom.min.js">
+		Rainbow.defer = true;
+	</script>
+	<link rel="stylesheet" href="../../asset/rainbow-doc.css">
+	<link rel="apple-touch-icon" sizes="180x180" href="asset/icon/favicon/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="asset/icon/favicon/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="asset/icon/favicon/favicon-16x16.png">
+	<link rel="manifest" href="asset/icon/favicon/site.webmanifest">
+</head>
+<body>
+<header id="welcome">
+	<a href="../..">
+		<img src="../../asset/icon/favicon/favicon-blue.svg" width="50px" alt="Code-filarete home"/>
+	</a>
+	<h1>
+		<img src="asset/icon/favicon/stalactite-icon.svg" width="50px" alt="Stalactite icon"/>
+		<span>Welcome to Stalactite documentation !</span>
+	</h1>
+	<select onchange="location.assign('../' + this.options[this.selectedIndex].value)">
+		<option value="2.0.0">2.0.0 (latest)</option>
+		<option selected value="1.0.0">1.0.0</option>
+	</select>
+</header>
+<div id="main">
+	<section id="toc"></section>
+	<div id="sep"></div>
+	<section id="content">
+		<h1 id="introduction">Stalactite introduction</h1>
+		<html-include src="introduction.html"></html-include>
+		<h1 id="persistence-configuration">Persistence configuration</h1>
+		<html-include src="usage.html"></html-include>
+		<h1 id="mapping-configuration">Mapping configuration</h1>
+		<html-include src="configuration/mapping-simple-entity-properties.html"></html-include>
+		<html-include src="configuration/mapping-enum.html"></html-include>
+		<html-include src="configuration/mapping-embeddable-bean.html"></html-include>
+		<h1 id="relation-configuration">Relation configuration</h1>
+		<html-include src="relation-configuration/one-to-one.html"></html-include>
+		<html-include src="relation-configuration/one-to-many.html"></html-include>
+		<html-include src="relation-configuration/cascading-policies.html"></html-include>
+		<html-include src="identifier-policy/index.html"></html-include>
+		<html-include src="identifier-policy/after-insertion.html"></html-include>
+		<html-include src="identifier-policy/before-insertion.html"></html-include>
+		<html-include src="identifier-policy/already-assigned.html"></html-include>
+		<h1 id="inheritance">Inheritance</h1>
+		<html-include src="inheritance/non-polymorphic.html"></html-include>
+		<html-include src="inheritance/polymorphic.html"></html-include>
+		<html-include src="persisting-entities.html"></html-include>
+		<h1 id="querying-database">Querying database</h1>
+		<p>For reminder, Stalactite offers an API to query databases, as a difference from JPA / Hibernate there’s no query language (see reasons in
+			introduction paragraph).</p>
+		<h2 id="selecting-entities-from-criteria">Selecting entities from criteria</h2>
+		<html-include src="querying-database/selecting-an-entity.html"></html-include>
+		<h2 id="selecting-a-projection">Selecting a projection</h2>
+		<html-include src="querying-database/selecting-a-projection/selection-a-projection.html"></html-include>
+		<html-include src="querying-database/selecting-a-projection/targeting-one-table.html"></html-include>
+		<html-include src="persistence-listeners.html"></html-include>
+		<html-include src="generating-database-schema.html"></html-include>
+		<h1 id="transversal-configuration">Transversal configuration</h1>
+		<html-include src="transversal-configuration/naming-strategies.html"></html-include>
+		<html-include src="transversal-configuration/dialect/index.html"></html-include>
+		<html-include src="transversal-configuration/dialect/default-mapped-types.html"></html-include>
+		<html-include src="transversal-configuration/dialect/registering-its-own-dialect.html"></html-include>
+		<html-include src="transversal-configuration/dialect/dialect-resolution.html"></html-include>
+		<h1 id="architecture-tips">Architecture tips</h1>
+		<html-include src="architecture-tips/dont-create-a-persister-to-rule-them-all.html"></html-include>
+		<html-include src="architecture-tips/a-word-about-performance.html"></html-include>
+		<html-include src="architecture-tips/multiple-entities-targeting-same-table.html"></html-include>
+	</section>
+</div>
+</body>
+<script>
+	let asyncLoader = 0;
+	class HTMLInclude extends HTMLElement {
+		constructor() {
+			super();
+			asyncLoader++;
+			this.innerHTML = "Loading...";
+			this.loadContent();
+		}
+		
+		async loadContent() {
+			const source = this.getAttribute("src");
+			if (!source) {
+				throw new Error("No src attribute given.");
+			}
+			
+			const response = await fetch(source);
+			if (response.status !== 200) {
+				throw new Error(`Could not load resource: ${source}`);
+			}
+			this.innerHTML = await response.text();
+			asyncLoader--;
+		}
+	}
+
+	window.customElements.define("html-include", HTMLInclude);
+	const intervalId = setInterval(function() {
+		if (asyncLoader ===0) {
+			loaded();
+			clearInterval(intervalId);
+		}
+	}, 50);
+	
+	function loaded() {
+		numberizeHeadings();
+		const tocHeadingPerHeading = buildTableOfContent();
+		
+		// listen for scroll event to do positioning & highlights
+		let mainDocument = document.getElementById("content");
+		mainDocument.addEventListener('scroll', () => updateSidebar(mainDocument, tocHeadingPerHeading))
+		Rainbow.color(function() {
+			// this simple function triggers code highlighting
+		});
+	}
+	
+	function numberizeHeadings() {
+		const headings = [0, 0, 0, 0];
+		document.querySelectorAll("#content h1, #content h2, #content h3, #content h4").forEach(h => {
+			switch (h.tagName) {
+				case 'H1':
+					h.innerHTML = ++headings[1] + '. ' + h.innerHTML;
+					headings[2] = 0;
+					headings[3] = 0;
+					headings[4] = 0;
+					break;
+				case 'H2':
+					h.innerHTML = headings[1] + '.' + ++headings[2] + '. ' + h.innerHTML;
+					headings[3] = 0;
+					headings[4] = 0;
+					break;
+				case 'H3':
+					h.innerHTML = headings[1] + '.' + headings[2] + '.' + ++headings[3] + '. ' + h.innerHTML;
+					headings[4] = 0;
+					break;
+				case 'H4':
+					h.innerHTML = headings[1] + '.' + headings[2] + '.' + headings[3] + '.'+ ++headings[4] + '. ' + h.innerHTML;
+					break;
+			}
+		})
+	}
+	
+	function buildTableOfContent() {
+		const result = new Map();
+		document.querySelectorAll("#content h1, #content h2, #content h3, #content h4").forEach(h => {
+			switch (h.tagName) {
+				case 'H1':
+					let tocH1 = buildLinkTOCToContent(h, document.getElementById("toc"));
+					result.set(h, tocH1);
+					break;
+				case 'H2':
+					let tocH2 = buildLinkTOCToContent(h, document.getElementById("toc"));
+					result.set(h, tocH2);
+					break;
+				case 'H3':
+					let tocH3 = buildLinkTOCToContent(h, document.getElementById("toc"));
+					result.set(h, tocH3);
+					break;
+				case 'H4':
+					let tocH4 = buildLinkTOCToContent(h, document.getElementById("toc"));
+					result.set(h, tocH4);
+					break;
+			}
+		})
+		
+		function buildLinkTOCToContent(heading, toc) {
+			let tocHeading = document.createElement(heading.tagName);
+			tocHeading.innerHTML = heading.innerHTML;
+			let tocLink = document.createElement("a");
+			tocLink.appendChild(tocHeading);
+			tocLink.addEventListener("click", () => {
+				console.log(heading.offsetTop);
+				document.getElementById("content").scrollTo(0, heading.offsetTop - document.getElementById("toc").offsetTop);
+			})
+			toc.appendChild(tocLink);
+			return tocLink;
+		}
+		
+		return result;
+	}
+	
+	
+	function updateSidebar(mainDocument, tocHeadingPerHeading) {
+		if (mainDocument.currentSelected) {
+			tocHeadingPerHeading.get(mainDocument.currentSelected).classList.remove("active");
+		}
+		
+		let headings = mainDocument.querySelectorAll("#content h1, #content h2, #content h3, #content h4");
+		const top = mainDocument.scrollTop + mainDocument.offsetTop + 20; // offsetTop is to take header into account, 20 is some throttling
+		let last;
+		for (let i = 0; i < headings.length; i++) {
+			const heading = headings[i];
+			if (heading.offsetTop > top) {
+				if (!last) {
+					last = heading
+				}
+				break;
+			} else {
+				last = heading
+			}
+		}
+		if (last) {
+			mainDocument.currentSelected = last;
+			setActive(last, tocHeadingPerHeading);
+			document.getElementById("toc").scrollTo(0, tocHeadingPerHeading.get(last).offsetTop - document.getElementById("toc").offsetTop);
+		}
+	}
+	
+	function setActive(element, tocHeadingPerHeading) {
+		tocHeadingPerHeading.get(element).classList.add("active");
+	}
+</script>
+</html>
