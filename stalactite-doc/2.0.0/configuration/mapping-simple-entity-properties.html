@@ -15,6 +15,11 @@
     .mapKey(Country::getId, IdentifierPolicy.afterInsert())
     .map(Country::setName)
 </code></pre>
+<p>And if your field name doesn't match your accessor (your object doesn't follow Java Bean Naming convention), then you can specify it : </p>
+<pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
+    .mapKey(Country::getId, IdentifierPolicy.afterInsert())
+    .map(Country::setName).fieldName("countryName")
+</code></pre>
 </section>
 
 <h3 id="identifier">Identifier</h3>
@@ -27,7 +32,7 @@
 <p>See <a href="#identifier-policy">the Identifier Policy</a> chapter to see the available identifier policy.</p>
 
 <h3 id="composite-identifier">Composite identifier</h3>
-<p>Similarly to a single column identifier, you can defined a composite-key with the <code>mapCompositeKey(..)</code> method. The difference
+<p>Similarly to a single column identifier, you can define a composite-key with the <code>mapCompositeKey(..)</code> method. The difference
 with single-column key is that you shall detail the mapping of your composite-object as a second argument of the method. Supposing you have
 <code>Person</code> and its identifier is a <code>PersonId</code>, the definition can be done as such :</p>
 <pre><code class="language-java">MappingEase.entityBuilder(Person.class, PersonId.class)
