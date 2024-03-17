@@ -54,6 +54,13 @@ with single-column key is that you shall detail the mapping of your composite-ob
 <p>Please note that <em>primitive type properties are considered mandatory</em>, so it is not necessary to declare them as mandatory </p>
 </section>
 
+<h4 id="declaring-property-as-readonly">Declaring property as read-only</h4>
+<p>If you don't want Stalactite to write your property to the database, then you can mark it with the <code>readonly()</code> method on the property mapping</p>
+<pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
+    .mapKey(Country::getId, IdentifierPolicy.afterInsert())
+    .map(Country::getName).readonly()
+</code></pre>
+
 <h4 id="setting-a-column-name">Setting a column name</h4>
 <p>You can override a property column name by adding it as an argument of the <code>map(..)</code> method. </p>
 <pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
