@@ -148,16 +148,6 @@ h3, h4, h5 {
 	font-size: 1.2em;
 }
 
-table, th, td {
-	border: 1px solid black;
-	border-spacing: 0;
-}
-
-th, td {
-	padding: 3px;
-}
-
-
 /* Content layout */
 section .hint {
 	border-radius: 5px;
@@ -220,6 +210,46 @@ section .danger > *:first-child::before {
 	color : red;
 }
 
+
+th, td {
+	padding: 0.2em 0.3em;
+}
+
+table, th, td {
+	border-spacing: 0;
+}
+
+table {
+	border-radius: 5px;
+	padding: 2px;
+	box-shadow: 0 0 2px #7A7A7A;	/* can done with "border: 1px solid #7A7A7A" but looks better with shadow */
+}
+
+table th:first-child {
+	border-start-start-radius: 5px;
+}
+
+table th:last-child {
+	border-start-end-radius: 5px;
+}
+
+th {
+	background-color: #7A7A7A;
+	color: #f7f7f8;
+}
+
+table tr:nth-child(2n) {
+	background-color : gainsboro;
+}
+
+table tr:nth-child(2n+1) {
+	background-color : #CDCDCD;
+}
+
+td {
+	border-top: none;
+	border-bottom: none;
+}
 
 @media screen and (orientation: landscape) { /*and (min-width: 900px) {*/
 	body {

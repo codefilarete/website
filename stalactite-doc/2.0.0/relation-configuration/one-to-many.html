@@ -1,51 +1,18 @@
 <h2 id="one-to-many">One-to-many</h2>
-<p>Stalactite distinguishes <code>Set</code> from <code>List</code> to follow their semantic : </p>
-<ul>
-	<li><code>Set</code> can&rsquo;t have duplicate, whereas <code>List</code> can</li>
-	<li><code>Set</code> are not indexed, <code>List</code> are. So, Stalactite will store index when <code>List</code> are used, not with
-		<code>Set</code>.
-	</li>
-</ul>
-<section class="hint warn">
-<p>Developers should more consider <code>Set</code>s when mapping collection, even if their application owner uses &ldquo;List&rdquo; when describing
-	it&rsquo;s business, because most of the time it doesn&rsquo;t deal with duplicate nor index. </p>
-</section>
-<h3 id="mapping-sets">Mapping Sets</h3>
-<p>When declaring your mapping, one can use <code>mapOneToManySet</code> to map a Set.</p>
+Please note that as a difference with version 1.0.0, Stalactite 2.0.0 no more distinguishes Set from List while mapping collections.
+<p>Mapping a one-to-many relation can be done through the method <code>mapOneToMany(..)</code> and it requires a mapping configuration for the target related entity.</p>
+
 <pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
     .mapKey(Country::getId, IdentifierPolicy.afterInsert())
     .map(Country::getName)
-    .mapOneToManySet(Country::getCities, MappingEase.entityBuilder(City.class, Long.class)
+    .mapOneToMany(Country::getCities, MappingEase.entityBuilder(City.class, Long.class)
         .mapKey(City::getId, IdentifierPolicy.afterInsert())
         .map(City::getName))
 </code></pre>
-<p>If your relation is owned by reverse side, then you&rsquo;ll find how to declare it below.</p>
-<h4 id="sorting-sets">Sorting Sets</h4>
-<p>Since Stalactite doesn&rsquo;t use bytecode enhancement it leaves your <code>Set</code> untouched and won&rsquo;t instantiate one for you. This
-	means that your field must be initialized before it is filled by Stalactite, else a NullPointerException will be thrown (initialization at
-	construction time is a good place). This may look painful but it leaves you a high degree of customization for it.</p>
+<p>If your relation is owned by reverse side, then you&rsquo;ll find how to declare it hereafter.</p>
 
-<section class="hint warn">
-<p>You may choose to use LinkedHashSet thinking that you&rsquo;ll keep entity collection addition order, but that&rsquo;s not true because you&rsquo;ll
-	get <code>ResultSet</code> order which is not guaranteed to be steady across SQL select execution : Databases don&rsquo;t guarantee this order,
-	even if it is often (always ?) the same. </p>
-</section>
-
-<h3 id="mapping-lists">Mapping Lists</h3>
-<p>Mapping a <code>List</code> is closed to mapping a Set : you&rsquo;ll have to use <code>mapOneToManyList(..)</code> and use
-	<code>indexedBy(..)</code> method to declare the index column, as the latter is optional Stalactite will use &ldquo;idx&rdquo; as a default name
-	for this column.</p>
-<pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
-    .mapKey(Country::getId, IdentifierPolicy.afterInsert())
-    .map(Country::getName)
-    .mapOneToManyList(Country::getBiggestCities, MappingEase.entityBuilder(City.class, Long.class)
-        .mapKey(City::getId, IdentifierPolicy.afterInsert())
-        .map(City::getName))
-</code></pre>
-<h2 id="collections-common-mapping-features">Collections common mapping features</h2>
-<p>Hereafter are some common needs to <code>Set</code> and <code>List</code> mapping.</p>
 <h3 id="declaring-property-owned-by-reverse-side">Declaring property owned by reverse side</h3>
-<p>In both cases of <code>Set</code> and <code>List</code>, one may want to declare it as owned by reverse side. This can be done with same method as
+<p> one may want to declare it as owned by reverse side. This can be done with same method as
 	the one for one-to-one relation : <code>mappedBy(..)</code></p>
 <pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
     .mapKey(Country::getId, IdentifierPolicy.afterInsert())
@@ -79,5 +46,66 @@ MappingEase.entityBuilder(Country.class, Long.class)
 	.cascading(CascadeOptions.RelationMode.READ_ONLY)
 </code></pre>
 <section class="hint info">
-<p>Please have a look to <a href="#cascading-policies">cascading policies</a> to choose the one that fits your needs. </p>
+	<p>Please have a look to <a href="#cascading-policies">cascading policies</a> to choose the one that fits your needs. </p>
+</section>
+
+<h4 id="keeping-order">Keeping collection order</h4>
+
+<p>If your property is a <code>List</code> or a <code>LinkedHashSet</code> you're maybe interested in keeping their insertion
+ order, to do so the method <code>indexed()</code> shall be used :</p>
+
+<pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
+    .mapKey(Country::getId, IdentifierPolicy.afterInsert())
+    .map(Country::getName)
+    .mapOneToMany(Country::getBiggestCities, MappingEase.entityBuilder(City.class, Long.class)
+        .mapKey(City::getId, IdentifierPolicy.afterInsert())
+        .map(City::getName))
+        .indexed()
+</code></pre>
+
+<p>By default, this will create a column named <code>id</code> in your table, but you can change this behavior by
+using the method <code>indexedBy(String)</code> which let you define the column name as an argument.</p>
+
+<section class="hint warn">
+	<p>Developers should more consider <code>Set</code>s when mapping collection, even if their application owners use &ldquo;List&rdquo; when describing
+		their business, because most of the time the feature doesn&rsquo;t deal with duplicate nor index.</p>
+</section>
+
+<h4 id="specifying-instantiation-type">Managing instantiation type</h4>
+<p>By default, if your property is null, Stalactite will set it by using some default concrete type according to the type of the property:
+<table>
+	<thead>
+	<tr>
+		<th>Property type</th><th>Instantiated type</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td>List</td><td>ArrayList</td>
+	</tr><tr>
+		<td>SortedSet</td><td>TreeSet</td>
+	</tr><tr>
+		<td>Set</td><td>HashSet</td>
+	</tr><tr>
+		<td>Deque</td><td>ArrayDeque</td>
+	</tr>
+	</tbody>
+</table>
+
+<p>This behavior can be adapted : you can manage the exact type of your instantiated <code>Collection</code> by using the method <code>initializeWith(..)</code>.
+Hereafter is an example of using a Set that sorts Cities by their name :</p>
+
+<pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
+    .mapKey(Country::getId, IdentifierPolicy.afterInsert())
+    .map(Country::getName)
+    .mapOneToMany(Country::getBiggestCities, MappingEase.entityBuilder(City.class, Long.class)
+        .mapKey(City::getId, IdentifierPolicy.afterInsert())
+        .map(City::getName))
+        .initializeWith(() -> new TreeSet<>(Comparator.comparing(City::getName)))
+</code></pre>
+
+<section class="hint warn">
+<p>You may choose to use LinkedHashSet thinking that you&rsquo;ll keep entity collection addition order, but that&rsquo;s not true because you&rsquo;ll
+	get <code>ResultSet</code> order which is not guaranteed to be steady across SQL select execution : Databases don&rsquo;t guarantee this order,
+	even if it is often (always ?) the same. </p>
 </section>
