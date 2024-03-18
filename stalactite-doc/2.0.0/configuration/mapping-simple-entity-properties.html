@@ -60,10 +60,41 @@ with single-column key is that you shall detail the mapping of your composite-ob
 </section>
 
 <h4 id="declaring-property-as-readonly">Declaring property as read-only</h4>
-<p>If you don't want Stalactite to write your property to the database, then you can mark it with the <code>readonly()</code> method on the property mapping</p>
+<p>If you don't want Stalactite to write your property to the database, then you can mark it with the <code>readonly()</code> method on the property mapping.</p>
 <pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
     .mapKey(Country::getId, IdentifierPolicy.afterInsert())
     .map(Country::getName).readonly()
+</code></pre>
+
+<h4 id="converting-value">Converting value</h4>
+<p>You may need to adapt the value coming from the database, to do that you can use the <code>readConverter(..)</code> method to specify a <code>Converter</code>.
+Here is an example that upper cases a name :</p>
+<pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
+    .mapKey(Country::getId, IdentifierPolicy.afterInsert())
+    .map(Country::getName).readConverter(String::toUpperCase)
+</code></pre>
+
+<p>You do the same for writing to the database with the <code>writeConverter(..)</code> method and specify a <code>Converter</code> too.
+    Here is an example that upper cases a name :</p>
+<pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
+    .mapKey(Country::getId, IdentifierPolicy.afterInsert())
+    .map(Country::getName).writeConverter(String::toUpperCase)
+</code></pre>
+
+<p>A more advanced feature may be required if your property type doesn't match column one (considering you map your entities onto an
+    existing database schema that you can hardly change), for example if you have to handle some date written as text in the database,
+    but you want to manage <code>Date</code> on the Java side (prefer new java.time API instead of java.util.Date of course, this is only used for example).
+    To fulfill this goal you shall use the <code>sqlBinder(..)</code> method and specify a <code>ParameterBinder</code>
+    <code>ParameterBinder</code></p>
+<pre><code class="language-java">SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+    MappingEase.entityBuilder(Country.class, Long.class)
+    .mapKey(Country::getId, IdentifierPolicy.afterInsert())
+    .map(Country::getCreationDate)
+    .sqlBinder(new NullAwareParameterBinder<>(
+            // converting String to a Date when reading from the database
+            DefaultParameterBinders.STRING_BINDER.thenApply(dateFormatter::parse),
+            // writing the Date as a String when writing to the database
+            DefaultParameterBinders.STRING_BINDER.preApply(dateFormatter::format)))
 </code></pre>
 
 <h4 id="setting-a-column-name">Setting a column name</h4>
