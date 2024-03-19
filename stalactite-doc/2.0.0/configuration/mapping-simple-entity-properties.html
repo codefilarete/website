@@ -103,6 +103,7 @@ Here is an example that upper cases a name :</p>
     .mapKey(Country::getId, IdentifierPolicy.afterInsert())
     .map(Country::getName, &quot;isoCode&quot;)
 </code></pre>
+
 <h4 id="setting-a-column">Setting a column</h4>
 <p>If you already have a <code>Table</code> instance (a Stalactite <code>orm</code> class) representing the database table and its <code>Column</code>
 	instances you can reference them in the <code>map(..)</code> method, as you do for a column name.</p>
@@ -114,4 +115,12 @@ Column&lt;Table, String&gt; isoCodeColumn = countryTable.addColumn(&quot;isoCode
 MappingEase.entityBuilder(Country.class, Long.class)
     .mapKey(Country::getId, IdentifierPolicy.afterInsert())
     .map(Country::getName, isoCodeColumn)
+</code></pre>
+
+<h4 id="storing-in-secondary-table">Storing in separate table</h4>
+<p>If you need your property to be stored in some extra table, then you should chain your declaration with
+    an <code>extraTableName(..)</code> call.</p>
+<pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
+    .mapKey(Country::getId, IdentifierPolicy.afterInsert())
+    .map(Country::getName).extraTableName("SecondaryCountryTable")
 </code></pre>
