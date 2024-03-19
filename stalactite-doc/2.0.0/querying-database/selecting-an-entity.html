@@ -11,7 +11,7 @@
     .build(persistenceContext);
     
 List&lt;Country&gt; countries = persister.selectWhere(Country::getName, Operators.startsWith(&quot;F&quot;))
-        .execute();
+        .execute(Accumulators.toList());
 </code></pre>
 <p>It also works with relation, hereafter with a one-ton-many :</p>
 <pre><code class="language-java">RelationalEntityPersister&lt;Country, Long&gt; persister = (RelationalEntityPersister) entityBuilder(Country.class, Long.class)
@@ -25,7 +25,7 @@ List&lt;Country&gt; countries = persister.selectWhere(Country::getName, Operator
     
 List&lt;Country&gt; select = persister.selectWhere(Country::getName, Operators.startsWith(&quot;F&quot;))
         .andMany(Country::getCities, City::getName, Operators.eq(&quot;Grenoble&quot;))
-	.execute();
+	.execute(Accumulators.toList());
 </code></pre>
 <p>Beware that result returned by <code>entityBuilder(..).build(..)</code> must be cast to <code>RelationalEntityPersister</code> to allow chaining
 	criteria for relations such as <code>andMany(..)</code>.</p>

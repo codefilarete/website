@@ -7,7 +7,7 @@
 <h4 id="from-an-sql-statement">From an SQL statement</h4>
 <p>An object can be created from a simple SQL query thanks to the <code>PersistenceContext#newQuery(CharSequence, Class)</code> method. The first
 	argument contains the SQL to be executed, and the second is the type of bean built by the execution of the query. Then one can map selected
-	columns to object properties through method references :\</p>
+	columns to object properties through method references :</p>
 <pre><code class="language-java">persistenceContext.newQuery(&quot;select name, isoCode from Country&quot;, Country.class)
     .mapKey(Country::new, "name")
     .map(&quot;isoCode&quot;, Country::setIsoCode)

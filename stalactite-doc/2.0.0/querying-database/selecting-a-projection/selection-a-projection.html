@@ -4,14 +4,15 @@
 	exist with a signature accepting <code>Query</code> object which can be build thanks to a fluent API starting with
 	<code>QueryEase.select(..)</code>. </p>
 </section>
+
 <h4 id="from-an-sql-statement">From an SQL statement</h4>
 <p>An object can be created from a simple SQL query thanks to the <code>PersistenceContext#newQuery(CharSequence, Class)</code> method. The first
 	argument contains the SQL to be executed, and the second is the type of bean built by the execution of the query. Then one can map selected
-	columns to object properties through method references :\</p>
+	columns to object properties through method references :</p>
 <pre><code class="language-java">persistenceContext.newQuery(&quot;select name, isoCode from Country&quot;, Country.class)
     .mapKey(Country::new, "name")
     .map(&quot;isoCode&quot;, Country::setIsoCode)
-    .execute();
+    .execute(Accumulators.toSet());
 </code></pre>
 <p>By default the property type will be used to read <code>ResultSet</code> column, but if the column type doesn’t really match the bean property one
 	then we can enforce it by giving the type to use as an extra <code>map(..)</code> method parameter such as below. This will tell Stalactite to use
@@ -20,7 +21,7 @@
     .mapKey(Country::new, "name")
     .map(&quot;inhabitantCount&quot;, Country::setInhabitantCount, long.class)
     .map(&quot;isoCode&quot;, Country::setIsoCode)
-    .execute();
+    .execute(Accumulators.toSet());
 </code></pre>
 <p>At last, if some conversion needs to be done, you can specify it with some extra arguments to the <code>map(..)</code> method : the first extra one
 	is the Java type for the column to be read, and the second extra one is the converter. It will get the column value as input and its result will
@@ -29,32 +30,33 @@
     .mapKey(Country::new, "name")
     .map(&quot;nuclearWeaponCount&quot;, Country::setHasNuclearWeapon, int.class, weaponCount -&gt; weaponCount &gt; 0)
     .map(&quot;isoCode&quot;, Country::setIsoCode)
-    .execute();
+    .execute(Accumulators.toSet());
 </code></pre>
+
 <h4 id="setting-request-parameter">Setting request parameter</h4>
 <p>Of course one can give parameters to the query and set them through <code>set(..)</code> methods. Parameters are named (not indexed) and must be
 	prefixed by “:” in SQL, such as below :</p>
 <pre><code class="language-java">persistenceContext.newQuery(&quot;select name, isoCode from Country where isoCode = :code&quot;, Country.class)
 	.mapKey(Country::new, "name")
     .set(&quot;code&quot;, &quot;FR&quot;)
-    .singleResult()
-    .execute();
+    .execute(Accumulators.getFirst());
 </code></pre>
 <section class="hint warn">
 <p>Note that Stalactite will detect parameters and transform SQL as a <code>PreparedStatement</code> to avoid SQL injection. Meanwhile, parameter
 	detection is a kind of “simple and stupid” algorithm and won’t take all cases into account for now. </p>
 </section>
+
 <h4 id="bean-constructor-usage">Bean constructor usage</h4>
 <p>Stalactite also supports multiple-args constructor, supposing that <code>Country</code> has a 3-args constructor you can write :</p>
 <pre><code class="language-java">persistenceContext.newQuery(&quot;select id, name, isoCode from Country&quot;, Country.class)
     .mapKey(Country::new , &quot;id&quot;, long.class, “name”, String.class, “isoCode”, String.class)
-    .execute();
+    .execute(Accumulators.toSet());
 </code></pre>
 <p>Furthermore, since first argument of <code>mapKey(..)</code> methods is a <code>Function</code>, factory method pattern is also supported: supposing
 	that <code>Country</code> only exposes a static factory method called “fromDatabase” and not its private constructors, we can use it as well :</p>
 <pre><code class="language-java">persistenceContext.newQuery(&quot;select id, name, isoCode from Country&quot;, Country.class)
     .mapKey(Country::fromDatabase, &quot;id&quot;, long.class, “name”, String.class, “isoCode”, String.class)
-    .execute();
+    .execute(Accumulators.toSet());
 </code></pre>
 <section class="hint success">
 <p>Actually, thanks to the latter case, any factory method can be used, whether it is exposed by the entity class itself or not. </p>
@@ -66,7 +68,7 @@
     .mapKey( (SerializableFunction&lt;Long, Country&gt;) Country::new, &quot;id&quot;, long.class)
     .map(&quot;name&quot;, Country::setName)
     .map(&quot;isoCode&quot;, Country::setIsoCode)
-    .execute();
+    .execute(Accumulators.toSet());
 </code></pre>
 </section>
 
@@ -80,24 +82,23 @@ persistenceContext.newQuery(&quot;select id, name, isoCode from Country&quot;, C
     .mapKey(Country::new , countryTable.id)
     .map(countryTable.name, Country::setName)
     .map(countryTable.isoCode, Country::setIsoCode)
-    .execute();
+    .execute(Accumulators.toSet());
 </code></pre>
 <p>This way of writing ensures that your bean properties match column types since method signatures are made for it.</p>
-<p>Moreover you can combine it with fluent API select clause writing to obtain a very refactor-proof query :</p>
+<p>Moreover you can combine it with the select fluent API way of writing to obtain a refactor-proof query :</p>
 <pre><code class="language-java">CountryTable countryTable = new CountryTable();
 persistenceContext.newQuery(QueryEase.select(countryTable.id, countryTable.name, countryTable.isoCode).from(countryTable), Country.class)
     .mapKey(Country::new , countryTable.id)
     .map(countryTable.name, Country::setName)
     .map(countryTable.isoCode, Country::setIsoCode)
-    .execute();
+    .execute(Accumulators.toSet());
 </code></pre>
 <h4 id="returning-one-row">Returning one row</h4>
 <p>For very simple cases one can expect the request to return only one row, therefore the query should not return a <code>List</code> but a single
 	<code>Object</code> or <code>null</code>. To get such a behavior, just call <code>singleResult()</code> during mapping :</p>
 <pre><code class="language-java">int countryCount = persistenceContext.newQuery(&quot;select count(*) as countryCount from Country&quot;, int.class)
     .mapKey(&quot;countryCount&quot;, int.class)
-    .singleResult()
-    .execute();
+    .execute(Accumulators.getFirst());
 </code></pre>
 <h4 id="building-a-complex-model">Building a complex model</h4>
 <p>The query API lets also build a graph by attaching related beans to the root one through its accessor methods and a
@@ -111,7 +112,7 @@ persistenceContext.newQuery(QueryEase.select(countryTable.id, countryTable.name,
     .map(&quot;countryName&quot;, Country::setName)
     .map(&quot;isoCode&quot;, Country::setIsoCode)
     .map(BeanRelationFixer.of(Country::setCapital), new ResultSetRowTransformer&lt;&gt;(City.class, "cityId", DefaultResultSetReaders.LONG_PRIMITIVE_READER, City::new))
-    .execute();
+    .execute(Accumulators.toSet());
 </code></pre>
 <h5 id="to-many-relation">To-many relation</h5>
 <p>Attaching a collection to a root bean will use same method as to-one relation : since its first argument is a combiner of 2 beans we must create a
@@ -133,7 +134,7 @@ persistenceContext.newQuery(
     .map(&quot;countryName&quot;, Country::setName)
     .map(&quot;isoCode&quot;, Country::setIsoCode)
     .map(cityCountryCombiner, new ResultSetRowTransformer&lt;&gt;(City.class, "cityId", DefaultResultSetReaders.LONG_PRIMITIVE_READER, City::new))
-    .execute();
+    .execute(Accumulators.toSet());
 </code></pre>
 <h4 id="very-open-mapping">Very open mapping</h4>
 <p>If you don’t find the appropriate method to build your result, one may finally consume the read <code>ResultSet</code> thanks to a very open <code>map(..)</code>
@@ -149,5 +150,5 @@ persistenceContext.newQuery(
             city.setName(resultSet.getString("cityName"));
             rootBean.setCity(city);
         })
-    .execute();
+    .execute(Accumulators.toSet());
 </code></pre>
