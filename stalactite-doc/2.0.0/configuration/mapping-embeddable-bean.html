@@ -42,7 +42,7 @@
     .embed(Country::getPresident, MappingEase.embeddableBuilder(Person.class)
 		.map(Person::getId)
 		.map(Person::getName)
-        .embed(Person::getTimestamp, MappingEase.embeddableBuilder(Timestamp.class)
+		.embed(Person::getTimestamp, MappingEase.embeddableBuilder(Timestamp.class)
 			.map(Timestamp::getCreationDate)
 			.map(Timestamp::getModificationDate))
 			.overrideName(Timestamp::getModificationDate, &quot;presidentElectedAt&quot;)
