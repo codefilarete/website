@@ -22,7 +22,8 @@ Please note that as a difference with version 1.0.0, Stalactite 2.0.0 no more di
         .map(City::getName))
     .mappedBy(City::getCountry)
 </code></pre>
-<h4 id="without-bidirectional-relation">Without bidirectional relation</h4>
+
+<h3 id="without-bidirectional-relation">Without bidirectional relation</h3>
 <p>If you don&rsquo;t need bidirectionality, one may use the <code>mappedBy(..)</code> method with a <code>Column</code> parameter.</p>
 <pre><code class="language-java">Table cityTable = new Table(&quot;City&quot;);
 Column&lt;Table, Country&gt; cityCountryPointer = cityTable.addColumn(&quot;countryId&quot;, Country.class);
@@ -34,6 +35,7 @@ MappingEase.entityBuilder(Country.class, Long.class)
         .map(City::getName))
     .mappedBy(cityCountryPointer)
 </code></pre>
+
 <h3 id="cascade-type">Cascade type</h3>
 <p>By default, cascade policy is <code>ALL</code> (which means that unsaved target instance is saved when root is saved, but not deleted when root is
 	deleted), this behavior can be changed with the <code>cascading(..)</code> method :</p>
@@ -43,13 +45,31 @@ MappingEase.entityBuilder(Country.class, Long.class)
     .mapOneToManySet(Country::getCities, MappingEase.entityBuilder(City.class, Long.class)
         .mapKey(City::getId, IdentifierPolicy.afterInsert())
         .map(City::getName))
-	.cascading(CascadeOptions.RelationMode.READ_ONLY)
+    .cascading(CascadeOptions.RelationMode.READ_ONLY)
 </code></pre>
 <section class="hint info">
 	<p>Please have a look to <a href="#cascading-policies">cascading policies</a> to choose the one that fits your needs. </p>
 </section>
 
-<h4 id="keeping-order">Keeping collection order</h4>
+<h3 id="separate-fetching-1-N">Fetching relation separately</h3>
+<p>In order to load the relation, Stalactite will create a query that joins the implied tables, which may cause performance
+	issue by adding many columns to the query and many joins implying too many un-related tables if your graph contains
+	multiple one-to-many relations. That's why the API lets you ask for a separate fetch of the relation : the
+	implied tables are no more joined in the main query and a secondary query is executed to load the data of the relation.
+	This is not lazy-loading since the secondary query is not run when user accesses the property, but is included in the
+	entity graph load phase.</p>
+<p>To do such secondary loading, you should call <code>fetchSeparately()</code> on your relation configuration.</p>
+<pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
+    .mapKey(Country::getId, IdentifierPolicy.afterInsert())
+    .map(Country::getName)
+    .mapOneToManySet(Country::getCities, MappingEase.entityBuilder(City.class, Long.class)
+        .mapKey(City::getId, IdentifierPolicy.afterInsert())
+        .map(City::getName))
+        .fetchSeparately()
+    .cascading(CascadeOptions.RelationMode.READ_ONLY)
+</code></pre>
+
+<h3 id="keeping-order">Keeping collection order</h3>
 
 <p>If your property is a <code>List</code> or a <code>LinkedHashSet</code> you're maybe interested in keeping their insertion
  order, to do so the method <code>indexed()</code> shall be used :</p>
@@ -71,7 +91,7 @@ using the method <code>indexedBy(String)</code> which let you define the column 
 		their business, because most of the time the feature doesn&rsquo;t deal with duplicate nor index.</p>
 </section>
 
-<h4 id="specifying-instantiation-type">Managing instantiation type</h4>
+<h3 id="specifying-instantiation-type">Managing instantiation type</h3>
 <p>By default, if your property is null, Stalactite will set it by using some default concrete type according to the type of the property:
 <table>
 	<thead>
