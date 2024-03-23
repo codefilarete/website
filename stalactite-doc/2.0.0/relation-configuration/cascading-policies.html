@@ -1,5 +1,5 @@
 <h2 id="cascading-policies">Cascading policies</h2>
-<p>Stalactite defines 4 types of cascade policy, they can all be applied to one-to-one or one-to-many relation. Please have a look at the table below
+<p>Stalactite defines 4 types of cascade policy, they can all be applied to one-to-one, one-to-many and many-to-many relations. Please have a look at the table below
 	to learn what each of them do:</p>
 <table>
 	<thead>
@@ -39,6 +39,6 @@
 </table>
 <section class="hint info">
 <p><em>ASSOCIATION_ONLY particular case</em></p>
-<p>Please note that this policy is only relevant for one-to-many relation with association table.</p>
-<p>This policy is intended to be used when targets shouldn&rsquo;t be inserted nor deleted but association must be maintained. </p>
+<p>Please note that this policy is only relevant for one-to-many relations with association table and many-to-many relations.</p>
+<p>This policy is intended to be used when targets shouldn&rsquo;t be inserted, updated nor deleted but association must be maintained.</p>
 </section>

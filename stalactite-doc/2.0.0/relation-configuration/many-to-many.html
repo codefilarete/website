@@ -1,0 +1,11 @@
+<h2 id="many-to-many">Many-to-many</h2>
+<p>Mapping a many-to-many relation can be done through the method <code>mapManyToMany(..)</code> and it requires a
+	mapping configuration for the target related entity. In the example below we consider a multiple-choice question
+	and want to store its answers : an answer can have multiple choices, each choice can be referenced by multiple answers :</p>
+
+<pre><code class="language-java">MappingEase.entityBuilder(Answer.class, Long.class)
+    .mapKey(Answer::getId, IdentifierPolicy.afterInsert())
+    .mapManyToMany(Answer::getChoices, entityBuilder(Choice.class, Long.class)
+        .mapKey(Choice::getId, IdentifierPolicy.afterInsert())
+        .map(Choice::getLabel))
+</code></pre>

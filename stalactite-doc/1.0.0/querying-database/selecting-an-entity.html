@@ -13,7 +13,7 @@
 List&lt;Country&gt; countries = persister.selectWhere(Country::getName, Operators.startsWith(&quot;F&quot;))
         .execute();
 </code></pre>
-<p>It also works with relation, hereafter with a one-ton-many :</p>
+<p>It also works with relation, hereafter with a one-to-many :</p>
 <pre><code class="language-java">RelationalEntityPersister&lt;Country, Long&gt; persister = (RelationalEntityPersister) entityBuilder(Country.class, Long.class)
     .mapKey(Country::getId, IdentifierPolicy.afterInsert())
     .map(Country::getName)
