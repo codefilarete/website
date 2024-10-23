@@ -1,6 +1,6 @@
 <h2 id="persister-as-spring-bean">Declaring Stalactite @Beans</h2>
 <p>As you've seen in introduction, Stalactite requires a <code>PersistenceContext</code> for its <code>EntityPersister</code>s.
-    You can create one thanks to the @Bean annotation on the method creating yours, it self put into a @Configuration class.
+    You can create one thanks to the @Bean annotation on the method creating yours, itself put into a @Configuration class.
     No Stalactite magic here, only Spring one:
 </p>
 <pre><code class="language-java">@Bean
@@ -34,7 +34,7 @@ public EntityPersister&lt;Person, Identifier&lt;Long&gt;&gt; personPersister(Per
 <h2 id="stalactite-repository">Repository</h2>
 <p>With the <code>spring-integration</code> module, Stalactite provides a way to ease the creation of Spring repository
     as Spring does with <code>JpaRepository</code>, but this is called <code>StalactiteRepository</code> and doesn't
-    brings the same methods, here the implemented ones:</p>
+    bring the same methods, here the implemented ones:</p>
 <ul>
     <li><code>save</code> - saves the given entity, either inserting it or updating it according to its persistence states</li>
     <li><code>saveAll</code> - same as previous one, with a massive API</li>
@@ -58,7 +58,7 @@ public interface DummyStalactiteRepository extends StalactiteRepository&lt;Perso
 }
 </code></pre>
 
-This will gives you access to the above methods for your entity:
+This will give you access to the above methods for your entity:
 <pre><code class="language-java">Optional&lt;Person&gt; loadedPerson = personRepository.findById(1L);
 loadedPerson.setName("John Doe");
 personRepository.save(loadedPerson);
