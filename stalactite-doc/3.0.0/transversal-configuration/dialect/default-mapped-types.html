@@ -1,0 +1,63 @@
+<h2 id="default-mapped-types">Default mapped types</h2>
+<p>Dialects define the way simple types, meaning having only one value, are mapped onto a column. So, for it we need 2 things : </p>
+<ul>
+	<li>a column SQL type, only required for database schema generation</li>
+	<li>the way the column can be read and written, respectively from a ResultSet and a Statement</li>
+</ul>
+<h3 id="specifying-sql-type">Specifying SQL type</h3>
+<p>The former is accessible through <code>Dialect.getSqlTypeRegistry()</code> which gives you several put(..) methods either to define a SQL type for
+	a Java class, or for a particular <code>Column</code>, in you need to override its SQL type. For example, supposing you need to store a JDK <code>AtomicInteger</code>
+	(it has only one <code>int</code> internal value) :</p>
+<pre><code class="language-java">Dialect myDialect = new Dialect();
+myDialect.getSqlTypeRegistry().put(AtomicInteger.class, &quot;integer&quot;);
+</code></pre>
+<p>You can do the same but exceptionally for a Column :</p>
+<pre><code class="language-java">Dialect myDialect = new Dialect();
+Table myTable = new Table(&quot;myTable&quot;);
+Column&lt;Table, AtomicInteger&gt; myAtomicColumn = myTable.addColumn(&quot;counter&quot;, AtomicInteger.class);
+myDialect.getSqlTypeRegistry().put(myAtomicColumn, &quot;integer&quot;);
+</code></pre>
+
+<section class="hint success">
+<p>Stalactite declares some default SQL type in <code>Dialect</code> through a <code>DefaultTypeMapping</code>. It is expected to override this class
+	to let one overwrite a SQL type mapping for a particular DB vendor and/or version, then it may be given to a dedicated Dialect class that should
+	be <a href="#registering-its-own-dialect">registered</a>. </p>
+</section>
+<section class="hint info">
+<p>As a reminder, don&rsquo;t forget that defining SQL types is only necessary for schema generation. Hence, it is not required if you don&rsquo;t use
+	Stalactite for schema generation. </p>
+</section>
+<h3 id="specifying-how-to-read-an-write-types">Specifying how to read and write types</h3>
+<p>It can be interesting to be able to specify a particular way of reading and writing a simple Java type if you need to adapt it (for compatibility
+	with an RDBMS or business rule reason). To do it you must access the <code>ColumnBinderRegistry</code> by using <code>dialect.getColumnBinderRegistry()</code>,
+	then you&rsquo;ll use <code>register(..)</code> methods that either takes a <code>Class</code> or a <code>Column</code> as first argument (to
+	define it for a particular <code>Column</code> requirement), and a <code>ParameterBinder</code> as second one. Here stays the definition since you&rsquo;ll
+	need to define 2 methods : </p>
+<ul>
+	<li><code>doGet(ResultSet resultSet, String columnName)</code></li>
+	<li><code>set(PreparedStatement preparedStatement, int valueIndex, I value)</code></li>
+</ul>
+<p>Here is an example of all that process :</p>
+<pre><code class="language-java">ParameterBinder&lt;User&gt; userBinder = new ParameterBinder&lt;User&gt;() {
+    @Override
+    public User doGet(ResultSet resultSet, String columnName) throws SQLException {
+        User user = new User();
+        user.setName(resultSet.getString(columnName));
+        return user;
+    }
+			
+    @Override
+    public void set(PreparedStatement statement, int valueIndex, User value) throws SQLException {
+        statement.setString(valueIndex, value.getName());
+    }
+};
+		
+myDialect.getColumnBinderRegistry().register(User.class, userBinder);
+// database SQL type should be adapted too (not direct purpose of this example)
+myDialect.getSqlTypeRegistry().put(User.class, &quot;varchar(255)&quot;);
+</code></pre>
+
+<section class="hint success">
+<p>By default Stalactite declares some binders : the ones that are bounded to <code>ResultSet</code> getXXX(..) and <code>PreparedStatement</code>
+	setXXX(&hellip;) methods, and some others like UUID, Path, File, etc. See <code>ParameterBinderRegistry</code> for full list. </p>
+</section>

@@ -1,0 +1,12 @@
+<h2 id="registering-its-own-dialect">Registering its own Dialect</h2>
+<p>Dialects are discovered thanks to Java Service Provider system : Stalactite will look for subclassed of <code>DialectResolverEntry</code> in
+	classpath. Hence some files named <code>org.codefilarete.stalactite.sql.DialectResolver$DialectResolverEntry</code> must be present in
+	classpath and contain implementation of <code>DialectResolverEntry</code>: this interface contains 2 methods working in couple :</p>
+<ul>
+	<li><code>getDialect()</code> is expected to return an instance of the Dialect to use</li>
+	<li><code>getCompatibility()</code> should return a <code>DatabaseSignet</code> that describes the database (name and version) with which the
+		Dialect is compatible
+	</li>
+</ul>
+<p>Hence a subclass of <code>DialectResolverEntry</code> must be created for it : a simple way is to make your <code>Dialect</code> implements it
+	(then <code>getDialect()</code> return this), or decouples it as it is done by default in Stalactite and create dedicated class entry.</p>

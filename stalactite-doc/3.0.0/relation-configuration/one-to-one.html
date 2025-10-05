@@ -1,0 +1,89 @@
+<h2 id="one-to-one">One-to-one</h2>
+<p>Mapping a one-to-one relation can be done through the method <code>mapOneToOne(..)</code> and it requires a mapping configuration for the target related entity.</p>
+<pre><code class="language-java">FluentEntityMappingBuilder&lt;City, Long&gt; capitalMappingConfiguration = MappingEase.entityBuilder(City.class, Long.class)
+    .mapKey(Country::getId, IdentifierPolicy.afterInsert())
+    .map(City::getName);
+
+MappingEase.entityBuilder(Country.class, Long.class)
+    .mapKey(Country::getId, IdentifierPolicy.afterInsert())
+    .mapOneToOne(Country::getCapital, capitalMappingConfiguration)
+</code></pre>
+<section class="hint info">
+<p>Chaining those statements is encouraged in order to visualize graph complexity as relations are added : see <a href="#dont-create-a-persister-to-rule-them-all">how to organize Stalactite persisters</a>. For instance :</p>
+<pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
+    .mapKey(Country::getId, IdentifierPolicy.afterInsert())
+    .mapOneToOne(Country::getCapital, MappingEase.entityBuilder(City.class, Long.class)
+        .mapKey(City::getId, IdentifierPolicy.afterInsert())
+        .map(City::getName))
+        .mapOneToOne(City::getMayor, MappingEase.entityBuilder(Person.class, Long.class)
+            .mapKey(Person::getId, IdentifierPolicy.afterInsert())
+            .map(Person::getFirstName)
+            .map(Person::getLastName))
+            .mapOneToOne(Person::getCar, MappingEase.entityBuilder(Car.class, Long.class)
+                .mapKey(Car::getId, IdentifierPolicy.afterInsert())
+                .map(Car::getModelName))
+</code></pre>
+</section>
+
+<h3 id="declaring-property-owned-by-reverse-side">Declaring property owned by reverse side</h3>
+<p>By default property relation is owned by declaring side, but depending on your database design one may need to declare it on the target side, then method mappedBy(..) must be used :</p>
+<pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
+    .mapKey(Country::getId, IdentifierPolicy.afterInsert())
+    .mapOneToOne(Country::getCapital, MappingEase.entityBuilder(City.class, Long.class)
+        .mapKey(City::getId, IdentifierPolicy.afterInsert())
+        .map(City::getName))
+    .mappedBy(City::getCountry)
+</code></pre>
+<p>This creates a bidirectional one-to-one relation that will be persisted on a <code>City</code> table through the <code>countryId</code> column.</p>
+
+<h3 id="without-bidirectional-relation">Without bidirectional relation</h3>
+<p>If you don&rsquo;t need bidirectionality, one may use the <code>mappedBy(..)</code> method with a <code>Column</code> parameter.</p>
+<pre><code class="language-java">Table cityTable = new Table(&quot;City&quot;);
+Column&lt;Table, Long&gt; cityCountryPointer = cityTable.addColumn(&quot;countryId&quot;, Long.class);
+MappingEase.entityBuilder(Country.class, Long.class)
+    .mapKey(Country::getId, IdentifierPolicy.afterInsert())
+    .mapOneToOne(Country::getCapital, MappingEase.entityBuilder(City.class, Long.class)
+        .mapKey(City::getId, IdentifierPolicy.afterInsert())
+        .map(City::getName))
+    .mappedBy(cityCountryPointer)
+</code></pre>
+
+<h3 id="mandatory-relation">Mandatory relation</h3>
+<p>As we did for a simple property, a one-to-one relation can be declared mandatory through the <code>mandatory()</code> method :</p>
+<pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
+    .mapKey(Country::getId, IdentifierPolicy.afterInsert())
+    .mapOneToOne(Country::getCapital, MappingEase.entityBuilder(City.class, Long.class)
+        .mapKey(City::getId, IdentifierPolicy.afterInsert())
+        .map(City::getName))
+    .mandatory()
+</code></pre>
+<p>This implies that the owning property column is not nullable.</p>
+
+<h3 id="cascade-type">Cascade type</h3>
+<p>By default, cascade policy is <code>ALL</code> (which means that unsaved target instance is saved when root is saved, but not deleted when root is deleted), this behavior can be changed with the <code>cascading(..)</code> method :</p>
+<pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
+    .mapKey(Country::getId, IdentifierPolicy.afterInsert())
+    .mapOneToOne(Country::getCapital, MappingEase.entityBuilder(City.class, Long.class)
+        .mapKey(City::getId, IdentifierPolicy.afterInsert())
+        .map(City::getName))
+    .cascading(CascadeOptions.RelationMode.READ_ONLY)
+</code></pre>
+<section class="hint info">
+<p>Please have a look to <a href="#cascading-policies">cascading policies</a> to choose the one that fits your needs. </p>
+</section>
+
+<h3 id="separate-fetching-1-1">Fetching relation separately</h3>
+<p>In order to load the relation, Stalactite will create a query that joins the implied tables, which may cause performance
+    issue by adding many columns to the query which could be null most of the time. That's why the API lets you ask for a
+    separate fetch of the relation : the implied tables are no more joined in the main query and a secondary query is executed
+    to load the data of the relation. This is not lazy-loading since the secondary query is not run when user accesses the property,
+    but is included in the entity graph load phase.</p>
+<p>To do such secondary loading, you should call <code>fetchSeparately()</code> on your relation configuration.</p>
+<pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
+    .mapKey(Country::getId, IdentifierPolicy.afterInsert())
+    .mapOneToOne(Country::getCapital, MappingEase.entityBuilder(City.class, Long.class)
+        .mapKey(City::getId, IdentifierPolicy.afterInsert())
+        .map(City::getName))
+        .fetchSeparately()
+    .cascading(CascadeOptions.RelationMode.READ_ONLY)
+</code></pre>

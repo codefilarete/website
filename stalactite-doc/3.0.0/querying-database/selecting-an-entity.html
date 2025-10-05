@@ -1,0 +1,31 @@
+<p>Beyond classic possibility to select an entity through its id, Stalactite provides a way to retrieve them through some criteria that match their
+	properties : criteria are targeted through their method reference as they were defined during mapping.</p>
+<section class="hint warn">
+<p>Only properties used by mapping can be used as criteria. If a criteria contains a non-mapped property then an exception will be raised. </p>
+</section>
+<p>Here is a simple example to get all countries whose name starts with &ldquo;F&rdquo;, operators are available in class <code>org.codefilarete.stalactite.query.model.Operators</code>.
+</p>
+<pre><code class="language-java">EntityPersister&lt;Country, Long&gt; persister = entityBuilder(Country.class, Long.class)
+    .mapKey(Country::getId, IdentifierPolicy.afterInsert())
+    .map(Country::getName)
+    .build(persistenceContext);
+    
+List&lt;Country&gt; countries = persister.selectWhere(Country::getName, Operators.startsWith(&quot;F&quot;))
+        .execute(Accumulators.toList());
+</code></pre>
+<p>It also works with relation, hereafter with a one-to-many :</p>
+<pre><code class="language-java">RelationalEntityPersister&lt;Country, Long&gt; persister = (RelationalEntityPersister) entityBuilder(Country.class, Long.class)
+    .mapKey(Country::getId, IdentifierPolicy.afterInsert())
+    .map(Country::getName)
+    .mapOneToMany(Country::getCities, entityBuilder(City.class, Long.class)
+        .mapKey(City::getId, IdentifierPolicy.afterInsert())
+        .map(City::getName))
+        .mappedBy(City::getCountry)
+    .build(persistenceContext);
+    
+List&lt;Country&gt; select = persister.selectWhere(Country::getName, Operators.startsWith(&quot;F&quot;))
+        .andMany(Country::getCities, City::getName, Operators.eq(&quot;Grenoble&quot;))
+	.execute(Accumulators.toList());
+</code></pre>
+<p>Beware that result returned by <code>entityBuilder(..).build(..)</code> must be cast to <code>RelationalEntityPersister</code> to allow chaining
+	criteria for relations such as <code>andMany(..)</code>.</p>

@@ -1,0 +1,66 @@
+<h2 id="persister-as-spring-bean">Declaring Stalactite @Beans</h2>
+<p>As you've seen in introduction, Stalactite requires a <code>PersistenceContext</code> for its <code>EntityPersister</code>s.
+    You can create one thanks to the @Bean annotation on the method creating yours, itself put into a @Configuration class.
+    No Stalactite magic here, only Spring one:
+</p>
+<pre><code class="language-java">@Bean
+public PersistenceContext persistenceContext(DataSource dataSource) {
+    return new PersistenceContext(dataSource);
+}
+</code></pre>
+
+<section class="hint info">
+	<p>As mentioned in <a href="#dialect-resolution">the dialect resolution chapter</a>, Stalactite has the capability
+		to auto-discover the right Dialect while passing a simple <code>DataSource</code> to <code>PersistenceContext</code> constructor.</p>
+</section>
+
+<p>Next step is to create your <code>EntityPersister</code> the same way you did for your <code>PersistenceContext</code>:</p>
+<pre><code class="language-java">@Bean
+public EntityPersister&lt;Person, Identifier&lt;Long&gt;&gt; personPersister(PersistenceContext persistenceContext) {
+    return MappingEase.entityBuilder(Person.class, long.class)
+            .mapKey(Person::getId, IdentifierPolicy.afterInsert())
+            .map(Person::getName)
+            .build(persistenceContext);
+}
+</code></pre>
+<p>Then your persister becomes @autowire-able as any other Spring bean.</p>
+
+<section class="hint info">
+    <p>Stalactite doesn't manage transactions and rely totally on Spring management for them through the annotation
+        <code>@Transactional</code> and the presence of a <code>PlatformTransactionManager</code>. Hence it will
+    integrate smoothly with a JPA context or a Spring Data one</p>
+</section>
+
+<h2 id="stalactite-repository">Repository</h2>
+<p>With the <code>spring-integration</code> module, Stalactite provides a way to ease the creation of Spring repository
+    as Spring does with <code>JpaRepository</code>, but this is called <code>StalactiteRepository</code> and doesn't
+    bring the same methods, here the implemented ones:</p>
+<ul>
+    <li><code>save</code> - saves the given entity, either inserting it or updating it according to its persistence states</li>
+    <li><code>saveAll</code> - same as previous one, with a massive API</li>
+    <li><code>findById</code> - try to find an entity by its id in the database</li>
+    <li><code>findAllById</code> - same as previous one, with a massive API</li>
+    <li><code>delete</code> - delete given entity from the database</li>
+    <li><code>deleteAll</code> - same as previous one, with a massive API</li>
+</ul>
+
+<section class="hint danger">
+    <p>For now Stalactite doesn't support derived queries.</p>
+</section>
+
+<p>The mechanism behind <code>StalactiteRepository</code> is the same as <code>JPARepository</code>, so <em>you need first
+    to enable the feature by applying the <code>@EnableStalactiteRepositories</code> annotation to your Spring configuration</em>.
+    Then, you can simply create a repository for your entity by creating an interface, as such:
+</p>
+
+<pre><code class="language-java">@Repository
+public interface DummyStalactiteRepository extends StalactiteRepository&lt;Person, Long&gt; {
+}
+</code></pre>
+
+This will give you access to the above methods for your entity:
+<pre><code class="language-java">Optional&lt;Person&gt; loadedPerson = personRepository.findById(1L);
+loadedPerson.setName("John Doe");
+personRepository.save(loadedPerson);
+personRepository.delete(loadedPerson);
+</code></pre>

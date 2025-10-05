@@ -1,0 +1,16 @@
+<h2 id="mapping-element-collection">Mapping a collection of elements</h2>
+<p>To map a <code>Collection</code> of elements (not entities) you must use the <code>mapCollection(..)</code> method,
+    which takes as second argument the element type.</p>
+<pre><code class="language-java">MappingEase.entityBuilder(Person.class, Long.class)
+    .mapKey(Person::getId, IdentifierPolicy.afterInsert())
+    .mapEnum(Person::getNicknames, String.class)
+</code></pre>
+
+<p>If your element type is complex (more than one column) you shall give the bean configuration as third argument.</p>
+<pre><code class="language-java">MappingEase.entityBuilder(Person.class, Long.class)
+    .mapKey(Person::getId, IdentifierPolicy.afterInsert())
+    .mapEnum(Person::getTimestamps, Timestamp.class, MappingEase.embeddableBuilder(Timestamp.class)
+            .map(Timestamp::getCreationDate)
+            .map(Timestamp::getModificationDate))
+</code></pre>
+

@@ -1,0 +1,27 @@
+<h2 id="mapping-map">Mapping a Map</h2>
+<p>To map a <code>Map</code> you must use the <code>mapMap(..)</code> method and give it key element type and value
+    element type.</p>
+<pre><code class="language-java">MappingEase.entityBuilder(Person.class, Long.class)
+    .mapKey(Person::getId, IdentifierPolicy.afterInsert())
+    .mapMap(Person::getPhoneNumbers, String.class, String.class)
+</code></pre>
+
+<p>If your key element type is complex bean (more than one column) or your value type is complex, then you must describe
+them by chaining the mapping with <code>withKeyMapping(..)</code> or <code>withValueMapping(..)</code> respectively</p>
+<pre><code class="language-java">MappingEase.entityBuilder(Person.class, Long.class)
+    .mapKey(Person::getId, IdentifierPolicy.afterInsert())
+    .mapMap(Person::getAddresses, Period.class, Address.class)
+            .withKeyMapping(MappingEase.embeddableBuilder(Period.class)
+                    .map(Period::getStartDate)
+                    .map(Period::getEndDate))
+            .withValueMapping(MappingEase.embeddableBuilder(Address.class)
+                    .map(Address::getStreet)
+                    .map(Address::getZipCode))
+                    .map(Address::getCity))
+</code></pre>
+
+<p><section class="hint success">
+    <p>Stalactite supports the storage of entities as key or value in <code>Map</code>s. You have simple to use the
+    <code>withKeyMapping(..)</code> or <code>withValueMapping(..)</code> but give them an entity configuration through
+    the <code>MappingEase.entityBuilder(..)</code> method.</p>
+</section>
