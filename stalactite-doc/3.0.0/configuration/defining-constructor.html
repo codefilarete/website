@@ -4,9 +4,7 @@
     <code>usingConstructor(..)</code> method.
     <br>
     By using a constructor with arguments, your entity can declare its fields as <code>final</code> which can be helpful
-    for the identifier of the entity, for example. However, if thinking about the identifier seems obvious, it doesn't mean that it is mandatory for
-    the provided factory: you may build your entity from any columns found in the database and let Stalactite set the identifier later for you (by
-    any property accessor you provided with <code>mapKey(..)</code>)
+    for the identifier of the entity, for example.
     <br>
     Here is a very simple example that makes Stalactite uses the one-arg <code>Person</code> constructor that takes its
     id as argument:
