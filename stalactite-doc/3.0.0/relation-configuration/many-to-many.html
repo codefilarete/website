@@ -4,8 +4,8 @@
 	and want to store its answers : an answer can have multiple choices, each choice can be referenced by multiple answers :</p>
 
 <pre><code class="language-java">MappingEase.entityBuilder(Answer.class, Long.class)
-    .mapKey(Answer::getId, IdentifierPolicy.afterInsert())
+    .mapKey(Answer::getId, IdentifierPolicy.databaseAutoIncrement())
     .mapManyToMany(Answer::getChoices, entityBuilder(Choice.class, Long.class)
-        .mapKey(Choice::getId, IdentifierPolicy.afterInsert())
+        .mapKey(Choice::getId, IdentifierPolicy.databaseAutoIncrement())
         .map(Choice::getLabel))
 </code></pre>

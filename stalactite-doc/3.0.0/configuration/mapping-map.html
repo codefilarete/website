@@ -1,27 +1,59 @@
 <h2 id="mapping-map">Mapping a Map</h2>
-<p>To map a <code>Map</code> you must use the <code>mapMap(..)</code> method and give it key element type and value
+<h3 id="mapping-map-basis">Declaring the Map</h3>
+<p>To map a <code>Map</code> you must use the <code>mapMap(..)</code> method and give it the key element type and the value
     element type.</p>
 <pre><code class="language-java">MappingEase.entityBuilder(Person.class, Long.class)
-    .mapKey(Person::getId, IdentifierPolicy.afterInsert())
-    .mapMap(Person::getPhoneNumbers, String.class, String.class)
+    .mapMap(Person::getPhoneNumbers, String.class /* personal, office, mobile, ... */, String.class)
 </code></pre>
 
 <p>If your key element type is complex bean (more than one column) or your value type is complex, then you must describe
 them by chaining the mapping with <code>withKeyMapping(..)</code> or <code>withValueMapping(..)</code> respectively</p>
 <pre><code class="language-java">MappingEase.entityBuilder(Person.class, Long.class)
-    .mapKey(Person::getId, IdentifierPolicy.afterInsert())
     .mapMap(Person::getAddresses, Period.class, Address.class)
             .withKeyMapping(MappingEase.embeddableBuilder(Period.class)
                     .map(Period::getStartDate)
                     .map(Period::getEndDate))
             .withValueMapping(MappingEase.embeddableBuilder(Address.class)
                     .map(Address::getStreet)
-                    .map(Address::getZipCode))
+                    .map(Address::getZipCode)
                     .map(Address::getCity))
 </code></pre>
 
 <p><section class="hint success">
-    <p>Stalactite supports the storage of entities as key or value in <code>Map</code>s. You have simple to use the
-    <code>withKeyMapping(..)</code> or <code>withValueMapping(..)</code> but give them an entity configuration through
-    the <code>MappingEase.entityBuilder(..)</code> method.</p>
+    <p>Stalactite supports the storage of entities as key or value in <code>Map</code>s. You simply have to use the
+    <code>withKeyMapping(..)</code> or <code>withValueMapping(..)</code> and give them an entity or embeddable
+    persistence configuration through the <code>MappingEase.entityBuilder(..)</code> or
+    <code>MappingEase.embeddableBuilder(..)</code> methods.</p>
 </section>
+
+<h3 id="mapping-map-initialization">Map initialization</h3>
+<p>
+    As for collections, by default, Stalactite will choose a default implementation for your Map (e.g.,
+    <code>HashMap</code> for <code>List</code>).
+    You can override this by providing a custom factory using <code>initializeWith(..)</code>.
+</p>
+<pre><code class="language-java">MappingEase.entityBuilder(Person.class, Long.class)
+    .mapMap(Person::getAddresses, LocalDate.class, String.class)
+	.initializeWith(() -> new TreeMap<>(Comparator.reverseOrder()));
+</code></pre>
+
+<h3 id="mapping-map-table-customization">Table and Column customization</h3>
+<p>
+    By default, element collections are stored in a separate table named according to the property name with default
+    column names. You can customize the table and column names and sizes by calling a set of dedicated methods :
+</p>
+<ul>
+    <li><code>onTable(String tableName)</code>: sets the name of the target table.</li>
+    <li><code>onTable(Table table)</code>: uses a specific <code>Table</code> object, allowing for precise column definitions.</li>
+    <li><code>reverseJoinColumn(String name)</code>: specifies the name of the foreign key column pointing back to the owner entity.</li>
+    <li><code>keyColumn(String)</code>: specifies the name of the column storing the Map key.</li>
+    <li><code>keySize(Size)</code>: specifies the <code>Size</code> of the column storing the Map key.</li>
+    <li><code>valueColumn(String)</code>: specifies the name of the column storing the Map value.</li>
+    <li><code>valueSize(Size)</code>: specifies the <code>Size</code> of the column storing the Map value.</li>
+</ul>
+
+<pre><code class="language-java">MappingEase.entityBuilder(Person.class, Long.class)
+    .mapMap(Person::getPhoneNumbers, String.class /* personal, office, mobile, ... */, String.class)
+    .onTable("PHONES")
+    .reverseJoinColumn("person_id")
+</code></pre>

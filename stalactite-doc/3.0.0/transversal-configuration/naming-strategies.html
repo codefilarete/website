@@ -1,15 +1,17 @@
 <h2 id="naming-strategies">Naming strategies</h2>
 <h3 id="table-naming-strategy">Table naming strategy</h3>
-<p>One may require to give a different policy than the default one which takes mapped class name as table name. To do this you should use <code>tableNamingStrategy(..)</code>
-	when building your mapping, by passing it an implementation of <code>TableNamingStrategy</code>.</p>
+<p>You may need to give a different policy than the default one that takes the mapped class name as the table name.
+	To do it, you should call <code>tableNamingStrategy(..)</code> when building your mapping and pass it an
+	implementation of <code>TableNamingStrategy</code>.</p>
 <section class="hint info">
-	<p>Default table naming strategy is TableNamingStrategy.DEFAULT </p>
+	<p>The default table naming strategy is TableNamingStrategy.DEFAULT </p>
 </section>
 <h3 id="column-naming-strategy">Column naming strategy</h3>
-<p>The default column naming strategy is to use the mapped property name as the one for the column. To change it, one should use <code>columnNamingStrategy(..)</code>
-	when building your mapping, by passing it an implementation of <code>ColumnNamingStrategy</code>.</p>
+<p>The default column naming strategy uses the mapped property name as the one for the column. To change it,
+	one should use <code>columnNamingStrategy(..)</code> when building your mapping, by passing it an implementation of
+	<code>ColumnNamingStrategy</code>.</p>
 <section class="hint info">
-	<p>Default column naming strategy is ColumnNamingStrategy.DEFAULT </p>
+	<p>The default column naming strategy is ColumnNamingStrategy.DEFAULT </p>
 </section>
 <h3 id="foreign-key-and-join-column-naming-strategy">Foreign key and join column naming strategy</h3>
 <p>Foreign keys and join columns can be named differently than the default strategy by applying some new <code>ForeignKeyNamingStrategy</code> and
@@ -18,15 +20,16 @@
 <section class="hint info">
 	<p></p>
 	<ul>
-		<li>Default foreign key naming strategy is ForeignKeyNamingStrategy.DEFAULT</li>
-		<li>Default join column naming strategy is ColumnNamingStrategy.JOIN_DEFAULT</li>
+		<li>The default foreign key naming strategy is ForeignKeyNamingStrategy.DEFAULT</li>
+		<li>The default join column naming strategy is ColumnNamingStrategy.JOIN_DEFAULT</li>
 		<li>ForeignKeyNamingStrategy.HASH and ForeignKeyNamingStrategy.HIBERNATE are also available</li>
 	</ul>
 </section>
 <h3 id="association-table-naming-strategy">Association table naming strategy</h3>
-<p>When mapping <code>List</code> association, you may need to change association table naming strategy, then use the method <code>associationTableNamingStrategy(..)</code>
-	with an instance of <code>AssociationTableNamingStrategy</code> as argument.</p>
+<p>When mapping <code>List</code> association, you may need to change association table naming strategy, then use the
+	method <code>associationTableNamingStrategy(..)</code> with an instance of <code>AssociationTableNamingStrategy</code>
+	as argument.</p>
 
 <section class="hint info">
-<p>Default association table naming strategy is AssociationTableNamingStrategy.DEFAULT </p>
+<p>The default association table naming strategy is AssociationTableNamingStrategy.DEFAULT </p>
 </section>

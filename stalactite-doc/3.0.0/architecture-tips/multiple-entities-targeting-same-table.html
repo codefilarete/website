@@ -1,6 +1,6 @@
-<h2 id="multiple-entities-targeting-same-table">Multiple entities targeting same table</h2>
-<p>If you deal with some legacy schema or want to separate some domains of your application, it is perfectly valid for Stalactite to target same table
-	with different entities. Of course you&rsquo;ll have to manage separation of concern of your entities : don&rsquo;t map same column twice, nor
-	identifier.</p>
-<p>Hence if you have some huge table with many columns you may decide to split its naturally-mapped entity into several ones, and eventually map some
-	has read-only for some domain context.</p>
+<h2 id="multiple-entities-targeting-same-table">Multiple entities targeting the same table</h2>
+<p>If you deal with some legacy schema or want to separate some application domains, it is perfectly valid for
+	Stalactite to target the same table with different entities. Obviously, you&rsquo;ll have to manage the separation of
+	concern of your entities: don&rsquo;t map the same column twice for writing, nor, overall, identifier.</p>
+<p>Hence, if you have a huge table with many columns, you may decide to split it over several entities and eventually
+	declare some of them as read-only for others.</p>

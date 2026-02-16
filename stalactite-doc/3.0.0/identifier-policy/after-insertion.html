@@ -2,6 +2,6 @@
 <p>This identifier policy uses database-generated id through auto-increment column. This policy only works with integer numbers such as
 	<code>Long</code> or <code>Integer</code>.</p>
 <pre><code class="language-java">MappingEase.entityBuilder(Car.class, long.class)
-    .mapKey(Country::getId, IdentifierPolicy.afterInsert())
+    .mapKey(Country::getId, IdentifierPolicy.databaseAutoIncrement())
     .map(Car::getModel)
 </code></pre>

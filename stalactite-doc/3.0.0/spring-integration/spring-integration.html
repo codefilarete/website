@@ -1,20 +1,19 @@
-<h2 id="persister-as-spring-bean">Declaring Stalactite @Beans</h2>
-<p>As you've seen in introduction, Stalactite requires a <code>PersistenceContext</code> for its <code>EntityPersister</code>s.
-    You can create one thanks to the @Bean annotation on the method creating yours, itself put into a @Configuration class.
-    No Stalactite magic here, only Spring one:
+<h2 id="spring-auto-configuration">Spring Auto-Configuration</h2>
+<p>Stalactite provides a Spring module that easily and quickly enables it thanks to Spring's auto-configuration mechanism:
+    by simpky adding the <code>spring-autoconfigure</code> dependency to your project, Stalactite will be automatically discovered.
+    Only a <code>DataSource</code> as a Spring Bean is required to make it available out-of-the-box.
+    Then, you can declare your <code>EntityPersister</code> through the usual Spring way: by using <code>@Bean</code> annotation
 </p>
-<pre><code class="language-java">@Bean
-public PersistenceContext persistenceContext(DataSource dataSource) {
-    return new PersistenceContext(dataSource);
-}
-</code></pre>
-
 <section class="hint info">
-	<p>As mentioned in <a href="#dialect-resolution">the dialect resolution chapter</a>, Stalactite has the capability
-		to auto-discover the right Dialect while passing a simple <code>DataSource</code> to <code>PersistenceContext</code> constructor.</p>
+    <p>As mentioned in <a href="#dialect-resolution">the dialect resolution chapter</a>, Stalactite has the ability
+        to auto-discover the right Dialect while passing a simple <code>DataSource</code> to <code>PersistenceContext</code> constructor.
+        This discovery can be overridden by declaring your own <code>Dialect</code> as a Spring Bean.
+    </p>
 </section>
 
-<p>Next step is to create your <code>EntityPersister</code> the same way you did for your <code>PersistenceContext</code>:</p>
+<h2 id="persister-as-spring-bean">Declaring Stalactite @Beans</h2>
+<p>The creation of your <code>EntityPersister</code> follows Spring mechanism for bean declaration. However, you should
+    expect a <code>PersistenceContext</code> as argument, which is necessary to build the persister:</p>
 <pre><code class="language-java">@Bean
 public EntityPersister&lt;Person, Identifier&lt;Long&gt;&gt; personPersister(PersistenceContext persistenceContext) {
     return MappingEase.entityBuilder(Person.class, long.class)
@@ -26,9 +25,9 @@ public EntityPersister&lt;Person, Identifier&lt;Long&gt;&gt; personPersister(Per
 <p>Then your persister becomes @autowire-able as any other Spring bean.</p>
 
 <section class="hint info">
-    <p>Stalactite doesn't manage transactions and rely totally on Spring management for them through the annotation
-        <code>@Transactional</code> and the presence of a <code>PlatformTransactionManager</code>. Hence it will
-    integrate smoothly with a JPA context or a Spring Data one</p>
+    <p>While running in a Spring context, Stalactite doesn't manage transactions and rely totally on Spring for them
+        through the annotation <code>@Transactional</code> and the presence of a <code>PlatformTransactionManager</code>.
+        Hence, it will integrate smoothly with a JPA context or a Spring Data one</p>
 </section>
 
 <h2 id="stalactite-repository">Repository</h2>
@@ -44,13 +43,9 @@ public EntityPersister&lt;Person, Identifier&lt;Long&gt;&gt; personPersister(Per
     <li><code>deleteAll</code> - same as previous one, with a massive API</li>
 </ul>
 
-<section class="hint danger">
-    <p>For now Stalactite doesn't support derived queries.</p>
-</section>
-
 <p>The mechanism behind <code>StalactiteRepository</code> is the same as <code>JPARepository</code>, so <em>you need first
     to enable the feature by applying the <code>@EnableStalactiteRepositories</code> annotation to your Spring configuration</em>.
-    Then, you can simply create a repository for your entity by creating an interface, as such:
+    Then, you can create a repository for your entity by creating an interface, as such:
 </p>
 
 <pre><code class="language-java">@Repository

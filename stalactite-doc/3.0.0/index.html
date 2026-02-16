@@ -23,7 +23,7 @@
 		<span>Welcome to Stalactite documentation !</span>
 	</h1>
 	<select onchange="location.assign('../' + this.options[this.selectedIndex].value)">
-		<option selected value="3.0.0">2.0.0 (latest)</option>
+		<option selected value="3.0.0">3.0.0 (latest)</option>
 		<option value="2.0.0">2.0.0</option>
 		<option value="1.0.0">1.0.0</option>
 	</select>
@@ -36,6 +36,7 @@
 		<html-include src="introduction.html"></html-include>
 		<h1 id="persistence-configuration">Persistence configuration</h1>
 		<html-include src="usage.html"></html-include>
+		<html-include src="persisting-entities.html"></html-include>
 		<h1 id="mapping-configuration">Mapping configuration</h1>
 		<html-include src="configuration/mapping-simple-entity-properties.html"></html-include>
 		<html-include src="configuration/mapping-enum.html"></html-include>
@@ -56,7 +57,6 @@
 		<h1 id="inheritance">Inheritance</h1>
 		<html-include src="inheritance/non-polymorphic.html"></html-include>
 		<html-include src="inheritance/polymorphic.html"></html-include>
-		<html-include src="persisting-entities.html"></html-include>
 		<h1 id="querying-database">Querying database</h1>
 		<p>For reminder, Stalactite offers an API to query databases, as a difference from JPA / Hibernate there’s no query language (see reasons in
 			introduction paragraph).</p>
@@ -75,6 +75,7 @@
 		<html-include src="transversal-configuration/dialect/dialect-resolution.html"></html-include>
 		<h1 id="spring-integration">Spring integration</h1>
 		<html-include src="spring-integration/spring-integration.html"></html-include>
+		<html-include src="spring-integration/spring-data.html"></html-include>
 		<h1 id="architecture-tips">Architecture tips</h1>
 		<html-include src="architecture-tips/dont-create-a-persister-to-rule-them-all.html"></html-include>
 		<html-include src="architecture-tips/a-word-about-performance.html"></html-include>

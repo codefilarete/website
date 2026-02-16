@@ -1,27 +1,26 @@
 <h2 id="defining-constructor">Specifying entity constructor</h2>
-<p>By default, Stalactite will lookup for a constructor that takes the <em>entity identifier as argument, if this constructor doesn't exist,
-    it will use the no-arg one</em>. But you may change this behavior by specifying the constructor that Stalactite should use through the
+<p>By default, Stalactite will look up for a constructor that takes the <em>entity identifier as argument, if this constructor doesn't exist,
+    it will use the no-arg one</em>. You may change this behavior by specifying the constructor that Stalactite should use through the
     <code>usingConstructor(..)</code> method.
     <br>
     By using a constructor with arguments, your entity can declare its fields as <code>final</code> which can be helpful
     for the identifier of the entity, for example.
     <br>
-    Here is a very simple example that makes Stalactite uses the one-arg <code>Person</code> constructor that takes its
+    Here is a basic example to make Stalactite use the one-arg <code>Country</code> constructor and takes its
     id as argument:
 </p>
-<pre><code class="language-java">MappingEase.entityBuilder(Person.class, Long.class)
-    .mapKey(Person::getId, IdentifierPolicy.afterInsert())
-    .mapMap(Person::getPhoneNumbers, String.class, String.class)
-    .usingConstructor(Person::new, "id")
+<pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
+    .mapKey(Country::getId, IdentifierPolicy.databaseAutoIncrement())
+    .usingConstructor(Country::new, "id")
 </code></pre>
 
-<p>There are several signatures of the <code>usingConstructor(..)</code> to let user configures Stalactite for its code :
+<p>Several signatures of <code>usingConstructor(..)</code> exist to let you configure Stalactite to your code :
 <ul>
     <li>with up to 3 column names, to address constructor with up to 3 arguments</li>
     <li>with up to 3 <code>Column</code>s, to address constructor with up to 3 arguments, as opposed to previous
         signature, this signature enforces constructor arg types since <code>Column</code>s are typed with generics
     </li>
-    <li>with the variant <code>usingFactory(Function&lt;Function&lt;Column&lt;?, ?&gt;, ?&gt;, C&gt; row)</code> that lets
+    <li>with the variant <code>usingFactory(Function&lt;ColumnedRow, C&gt; row)</code> that lets
         user pick up <code>Column</code> values in its argument</li>
 </ul>
 </p>
@@ -29,11 +28,26 @@
 Column&lt;Table, Long&gt; idColumn = countryTable.addColumn("id", long.class).primaryKey();
 Column&lt;Table, String&gt; nameColumn = countryTable.addColumn("name", String.class);
 
-[...]
-
-.usingFactory(row -> new Country(row.apply(idColumn), row.apply(nameColumn)))
+MappingEase.entityBuilder(Country.class, Long.class)
+    .mapKey(Country::getId, IdentifierPolicy.databaseAutoIncrement())
+    .map(Country::getName)
+    .usingFactory(row -> new Country(row.apply(idColumn), row.apply(nameColumn)))
 </code></pre>
 <p><section class="hint success">
-    <p>Since constructor is actually a <code>Function</code>, a factory method can also be used as a constructor: any
+    <p>Because constructors are actually <code>Function</code>s, a factory method can also be used as a constructor: any
         static method, even out of the entity class, can be used as a constructor.</p>
+</section>
+
+<p><section class="hint warn">
+    <p>Mapped properties which are actually set by the constructor should be declared as such to avoid an extra work by Stalactite:
+    without marking them, during rehydration from the database, both constructor and property setter will be invoked, which makes the latter superfluous.</p>
+    <pre><code class="language-java">Table countryTable = new Table("Country");
+Column&lt;Table, Long&gt; idColumn = countryTable.addColumn("id", long.class).primaryKey();
+Column&lt;Table, String&gt; nameColumn = countryTable.addColumn("name", String.class);
+
+MappingEase.entityBuilder(Country.class, Long.class)
+    .mapKey(Country::getId, IdentifierPolicy.databaseAutoIncrement()).setByConstructor()
+    .usingFactory(row -> new Country(row.apply(idColumn), row.apply(nameColumn)))
+    .map(Country::getName).setByConstructor()
+</code></pre>
 </section>

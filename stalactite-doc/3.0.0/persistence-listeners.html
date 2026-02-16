@@ -1,19 +1,20 @@
 <h1 id="persistence-listeners">Persistence listeners</h1>
 <p>Stalactite provides a listener for each persistence action : </p>
 <ul>
-	<li>InsertListener</li>
-	<li>UpdateListener</li>
-	<li>SelectListener</li>
-	<li>DeleteListener</li>
+	<li><code>PersistListener</code></li>
+	<li><code>InsertListener</code></li>
+	<li><code>UpdateListener</code></li>
+	<li><code>SelectListener</code></li>
+	<li><code>DeleteListener</code></li>
 </ul>
-<p>Each on these classes contains methods to be overriden for handling moments of their dedicated trigger : </p>
+<p>All these classes contain some methods to be overridden for handling the moments of their dedicated trigger : </p>
 <ul>
 	<li>before</li>
 	<li>after</li>
 	<li>error</li>
 </ul>
 <p>They all can be given to an <code>EntityPersister</code>, which is the result of the <code>entityBuilder(..)...build(..)</code> method, through
-	dedicated <code>addListener(..)</code> methods. Here is an example that manages timestamp of a Car : </p>
+	dedicated <code>addListener(..)</code> methods. Here is an example that manages the timestamp of a Car : </p>
 <pre><code class="language-java">EntityPersister&lt;Car, Long&gt; carPersister = entityBuilder(Car.class, Long.class)
     .mapKey(Car::getId, afterInsert())
     .map(Car::getModel)
@@ -30,11 +31,10 @@ carPersister.addInsertListener(new InsertListener&lt;Car&gt;() {
     }});
 carPersister.addUpdateListener(new UpdateListener&lt;Car&gt;() {
     @Override
-    public void beforeUpdate(Iterable&lt;? extends Duo&lt;? extends Car, ? extends Car&gt;&gt; payloads, boolean allColumnsStatement) {
+    public void beforeUpdate(Iterable&lt;? extends Duo&lt;Car, Car&gt;&gt; payloads, boolean allColumnsStatement) {
           payloads.forEach(p -&gt; p.getLeft().getTimestamp().setModificationDate(now()));
     }});
 </code></pre>
 <section class="hint info">
-<p>Please note that while using ORM module, you’re only able to add listeners to root entity since it’s the only available persister, as a consequence
-	you’ll only be notified with root entities as argument. </p>
+<p>Please note that you’re only able to add listeners to the root entity due to Stalactite way of persisting aggregates.</p>
 </section>

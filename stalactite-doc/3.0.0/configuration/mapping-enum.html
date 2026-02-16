@@ -2,48 +2,27 @@
 <p>Mapping enum looks very close to simple property mapping, the thing that changes is calling the <code>mapEnum(..)</code> method instead of the
 	<code>map(..)</code> method</p>
 <pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
-    .mapKey(Country::getId, IdentifierPolicy.afterInsert())
     .mapEnum(Country::getLanguage)
 </code></pre>
 <section class="hint info">
 <p>By default, enum names are used as persistence value, not their ordinal position. Hereafter you&rsquo;ll learn how to change this behavior. </p>
 </section>
 <h3 id="using-ordinal-position-as-persistence-value">Using ordinal position as persistence value</h3>
-<p>if you need to use enum ordinal values you can specify it with the <code>byOrdinal()</code> method after the <code>mapEnum(..)</code> method :</p>
+<p>if you need to use enum ordinal values, you can specify it with the <code>byOrdinal()</code> method after the <code>mapEnum(..)</code> method :</p>
 <pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
-    .mapKey(Country::getId, IdentifierPolicy.afterInsert())
     .mapEnum(Country::getLanguage).byOrdinal()
 </code></pre>
 <h3 id="ensuring-enum-name-as-persistence-value">Ensuring enum name as persistence value</h3>
-<p>As said before, <em>enum names are used by default so the following is not necessary</em>, but one may need to specify it. This can be done
-	in the same way as for ordinal value : call <code>byName()</code> after the <code>mapEnum(..)</code> method :</p>
+<p>As said before, <em>enum names are used by default, so the following is not necessary</em>, but one may need to specify it. This can be done
+	in the same way as for ordinal value: call <code>byName()</code> after the <code>mapEnum(..)</code> method :</p>
 <pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
-    .mapKey(Country::getId, IdentifierPolicy.afterInsert())
     .mapEnum(Country::getLanguage).byName()
 </code></pre>
 <h3 id="additional-options">Additional options</h3>
-<h4 id="declaring-property-as-mandatory">Declaring property as mandatory</h4>
-<p>If you want Stalactite to check against property nullity you can call the <code>mandatory()</code> method after mapping the enum</p>
-<pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
-    .mapKey(Country::getId, IdentifierPolicy.afterInsert())
-    .mapEnum(Country::getLanguage).mandatory()
-</code></pre>
-<p>This will add a non-null constraint on the database column, and will throw an exception in case of null value at insertion and update time.</p>
-<h4 id="setting-a-column-name">Setting a column name</h4>
-<p>You can override the enum column name by adding it as an argument of the <code>mapEnum(..)</code> method. </p>
-<pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
-    .mapKey(Country::getId, IdentifierPolicy.afterInsert())
-    .mapEnum(Country::getLanguage, &quot;locale&quot;)
-</code></pre>
-<h4 id="setting-a-column">Setting a column</h4>
-<p>If you already have a <code>Table</code> instance (a Stalactite <code>orm</code> class) representing the database table and its <code>Column</code>
-	instances you can reference them in the <code>mapEnum(..)</code> method, as you did for a column name.</p>
-<p>Column type and property type must match, this is guaranteed by generics type of the <code>mapEnum(..)</code> method signature.</p>
-<pre><code class="language-java">// Declaring a Table representing the one of the database schema
-Table countryTable = new Table(&quot;country&quot;);
-Column&lt;Table, String&gt; isoLocaleColumn = countryTable.addColumn(&quot;locale&quot;, Locale.class);
-
-MappingEase.entityBuilder(Country.class, Long.class)
-    .mapKey(Country::getId, IdentifierPolicy.afterInsert())
-    .mapEnum(Country::getLanguage, isoLocaleColumn)
-</code></pre>
+The <code>enum</code> properties are not so different from other ones and, as such, benefit from the same options, as
+<ul>
+    <li>making them mandatory</li>
+    <li>applying read and write converters</li>
+    <li>setting column name or size</li>
+    <li>and so on</li>
+</ul>

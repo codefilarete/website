@@ -1,6 +1,6 @@
 <h1 id="generating-database-schema">Generating database schema</h1>
 <p>Stalactite provides a way to get your schema generated, which can be quite useful in tests.</p>
-<p>DDLDeployer aims at providing such a service : the simplest way is to give it the <code>PersistenceContext</code> used also for building your
+<p>DDLDeployer aims at providing such a service: the simplest way is to give it the <code>PersistenceContext</code> used also for building your
 	<code>Persister</code>s, because it will automatically discover <code>Table</code>s and <code>Column</code>s that were added to the context. Then
 	we only have to invoke <code>deployDDL()</code> : </p>
 <pre><code class="language-java">DataSource dataSource = ... // create one from whatever manner

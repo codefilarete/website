@@ -1,0 +1,172 @@
+<h2 id="query-methods-support">Query Methods support</h2>
+<p>
+    As for the 3.0.0, Stalactite supports Spring Query Methods, which means that, after enabling them through the
+    <code>@EnableStalactiteRepositories</code> as you would do for JPA with <code>@EnableJPARepositories</code>, you
+    can make your repository inherit from <code>StalactiteRepository</code>, and define here some methods that will
+    trigger a query to the database without implementing the actual query: this mechanism stands on a method naming
+    convention defined by Spring Data, some more info can be found here
+    <a href="https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html">https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html</a>
+</p>
+<p>
+    Stalactite adheres to this naming convention and supports all Spring Data features: from this perspective, it
+    means that Stalactite can be a seamless replacement for JPA Framework.
+    However, since Stalactite doesn't follow JPA specification, inheriting from <code>StalactiteRepository</code>
+    won't bring you the same methods as you would have by inheriting form <code>JpaRepository</code>. Meanwhile, there
+    are some common methods signatures as <code>findById(id)</code> or <code>save(entity)</code>.
+</p>
+
+<h3>The basis</h3>
+<p>
+    As said above, Stalactite supports Spring Data naming pattern which can be summarized as this grammar pattern:
+    <br>
+    <code>(find | search | get | load) By &lt;property name&gt; &lt;operator&gt; [(And | Or) By &lt;property name&gt; &lt;operator&gt;] ... [SortBy &lt;property name&gt; &lt;direction&gt;]</code>
+</p>
+<p>
+    <code>&lt;operator&gt;</code> can be one of:
+</p>
+<ul>
+    <li>Equals</li>
+    <li>Like</li>
+    <li>Greater, GreaterThan, Lower, LowerThan</li>
+    <li>Between</li>
+    <li>In</li>
+    <li>IsTrue, IsFalse</li>
+    <li>IsNull, isNotNull</li>
+</ul>
+<p>It can also be empty, which stands for "Equals"</p>
+<ul>
+    <li>Some <code>&lt;operator&gt;</code> can also be combined with <code>IgnoreCase</code> (or <code>IgnoringCase</code>)
+        to make the operator compare values with a non-case-sensitive strength: <code>Equals</code>, <code>Like</code>, <code>In</code></li>
+    <li><code>&lt;operator&gt;</code> can be negated with the "Not" prefix.</li>
+</ul>
+<p>
+    These methods must have as many arguments as properties, except for "isTrue", "isFalse", "isNull", "isNotNull" ones which are explicit.
+    An example is:
+</p>
+<code>Set&lt;Person&gt; findByFirstNameLikeSortById(String firstNamePattern)</code>
+
+<p>Note that <code>Stream</code> return type is also supported.</p>
+
+<section class="hint info">
+    <p>TODO in-depth property</p>
+</section>
+
+<h3>Paging methods</h3>
+<p>
+    The support of Spring Data paging mechanism is also available: by adding an extra <code>Pageable</code> argument to
+    the method, we ask the result to be partial and to retrieve only the requested page of a whole entities Set:
+    <br>
+    <code>Pageable&lt;Person&gt; findByFirstNameLikeSortById(String firstNamePattern, Pageable page)</code>
+</p>
+<p>
+    <code>Pageable</code> results are of two kinds:
+</p>
+<ul>
+    <li>Pages: you get the requested page and the total amount of available entities in the query (this amount is deduced from a count query)</li>
+    <li>Slices: you get only the requested slice without knowing the total count of entities, then you navigate from page to page by successive method calls</li>
+</ul>
+<pre><code class="language-java">Slice&lt;Person&gt; personSlice1 = findByFirstNameLikeSortById("%John%", Pageable.of(5));    // retrieve the very first page of 5 persons matching "%John%" as firstName
+Slice&lt;Person&gt; personSlice2 = findByFirstNameLikeSortById("%John%", personSlice1.nextPageable());    // retrieve the 2nd page of 5 persons matching "%John%" as firstName
+</code></pre>
+
+<h3>Sorting</h3>
+<p>Spring Data proposes two ways to sort the result of the query:</p>
+<ul>
+    <li>either by declaring the sort order in the name of the method, which makes it unmodifiable: <code>findByFirstNameLikeSortByIdAscending(..)</code></li>
+    <li>or by passing a <code>Sort</code> parameter to the method, hence making it dynamic: <code>findByFirstNameLike("John%", Sort.by("id").ascending())</code></li>
+</ul>
+<p>
+    Implementation note: if the sorting property has a Collection on its path, then sorting is disabled, because it
+    may conflict (or be lost) with collection implementation, and since Stalactite provides some ways to define which
+    Collection type to use on such property with its mapping DSL, it has been considered that allowing to sort them
+    at query level may confuse people.
+</p>
+
+<section class="hint info">
+    <p>TODO sort in-memory</p>
+</section>
+
+<h3>Limiting result</h3>
+<p>
+    Result can be limited to a certain amount of entity by using Spring Data keyword "Top" followed by the quantity
+    of entity to retrieve.
+    A special case of the very first one is available through the keyword "First"
+</p>
+<ul>
+    <li><code>findTop10ByFirstNameLike(..)</code></li>
+    <li><code>findFirstByFirstNameLike(..)</code></li>
+</ul>
+
+<h3>Deleting methods</h3>
+<p>
+    Spring Data not only provides a mechanism to help retrieve data from the database, it also gives you a smart
+    way to delete some instances that match some criteria. To use it, you should simply replace the "find" keyword
+     with "delete" and make it followed by the same criteria you use for a "find":
+    <br>
+    <code>deleteByFirstNameLikeSortById(String firstNamePattern)</code>
+</p>
+<p>
+    Meanwhile, there are some restrictions: you can only give a first-level property criterion, in-depth one such as
+    one-to-one or one-to-many are not supported.
+    Obviously, the deletion doesn't support any paging capability nor sort.
+    Please note that, as a usual delete mechanism, deletion is made in 2 phases: the load of the entities, then the
+    actual delete order. This allows matching the ORM cascade and listener mechanisms.
+</p>
+
+<h3>Projection Query support</h3>
+<p>
+    As provided by Spring Data, Stalactite implements the projection of entities onto partial POJOs or interfaces.
+    The syntax and principle are those of Spring Data because Stalactite relies on it for the POJOs or interfaces
+    instances creation: Stalactite only provides the projection query and data loading.
+</p>
+
+<h2 id="query-discovery">Query discovery</h2>
+
+<h3>Query Override</h3>
+<p>
+    As along the same lines as Spring, Stalactite also provides a way to override the executed query:
+</p>
+<ul>
+    <li>either by a native SQL order, implying database vendor coupling and huge SQL writing to retrieve all necessary graph data</li>
+    <li>or by a Stalactite <code>ExecutableEntityQuery</code> defined through a <code>@Bean</code>, which avoids database vendor coupling because it relies on Stalactite capability to adapt the generated SQL according to database vendor</li>
+</ul>
+
+<h3>Native SQL override</h3>
+<p>
+    An SQL statement can be provided through the Stalactite <code>@NativeQuery</code> annotation on the repository
+    method. Here is an example:
+</p>
+<pre><code class="language-java">@NativeQuery(value = "select Restaurant.name as Restaurant_name,"
+		+ " Restaurant.id      as Restaurant_id,"
+		+ " Review.description as Review_description,"
+		+ " Review.rating      as Review_rating,"
+		+ " Review.id          as Review_id"
+		+ " from Restaurant"
+		+ " left outer join Review on Restaurant.id = Review.restaurant_id"
+		+ " where Restaurant.id in (:restauIds)")
+Set&lt;Restaurant&gt; loadByIdIn(@Param("restauIds") long... ids);
+</code></pre>
+<p>
+    You may notice that it uses a named parameter as you would do for JPA integration.
+    Moreover, you'll have to mimic Stalactite and provide all expected columns and respect their names too. As a
+    consequence this way of overriding SQL can barely be used for a huge graph due to its maintenance cost.
+</p>
+<p>
+    Note that you can target the database vendor for which you want to overwrite the native SQL by using
+    <code>@Query.vendor</code>, <code>@Query.major</code> and <code>@Query.minor</code>. And if you need it for several
+    of them, then the <code>@Queries</code> might come to the rescue for listing all the <code>@Query</code> you need.
+</p>
+
+<h3>Bean override</h3>
+<p>
+    To reduce maintenance cost and avoid boilerplate code, you may prefer to create an instance of Stalactite
+    <code>ExecutableEntityQuery</code> class and make it accessible through a Spring <code>@BeanQuery</code>.
+    For example, if we want to define a query for the <code>RestaurantRepository.findByRating(int rating)</code>
+    method (defined in an interface extending <code>StalactiteRepository</code>), you'll have to write such code
+    (in a Spring <code>@Configuration</code> class for example):
+</p>
+<pre><code class="language-java">@BeanQuery
+public ExecutableEntityQuery&lt;Restaurant, ?&gt; findByRating(EntityPersister&lt;Restaurant, long&gt; restaurantPersister) {
+    return restaurantPersister.selectWhere(AccessorChain.chain(Restaurant::getReview, Review::getRating), isGreaterThanArgNamed("rating", int.class));
+}
+</code></pre>

@@ -1,8 +1,8 @@
 <h2>What is it ?</h2>
 Stalactite aims at being an ORM, but also gives some tools to ease JDBC usage : trying to be an ORM as a framework, but with some modules that
-helps to create CRUD SQL statements for Objects.
+help to create CRUD SQL statements for Objects.
 <br>
-To fulfill this goal, the project is devided in 3 main modules :
+To fulfill this goal, the project is divided into 3 main modules :
 <ul>
 	<li>The <code>orm</code> module : deals with relations between entities and allows persistence description through a fluent API. Depends on <code>core</code>.</li>
 	<li>The <code>core</code> module : manages persistence of Objects without relation management. Depends on <code>sql</code>.</li>
@@ -15,7 +15,7 @@ To fulfill this goal, the project is devided in 3 main modules :
 </section>
 	
 <h2 id="why--the-genesis">Why ? The genesis</h2>
-Stalactite is born after many years of Hibernate usage on a application with a large domain (implying the creation of more than 200 database tables)
+Stalactite is born after many years of Hibernate usage on an application with a large domain (implying the creation of more than 200 database tables)
 which entities were directly exposed to the view. Over time this appeared to be a misconception since with a classical ORM this leads to a bothering
 fetch-all and cache-all solution to avoid lazy initialization error for the former, which caused performance issue, solved by the latter.
 Moreover, it comes with the observation that teams hardly master the framework even after years of practice :
@@ -24,21 +24,21 @@ Moreover, it comes with the observation that teams hardly master the framework e
 		get only a piece of it without loading the whole. Then you'll have to add additional annotation such as <code>@NamedEntityGraph</code> to
 		specify what you want to load
 	</li>
-	<li>entity state (attached, detached, etc.) is still a problem for newcomers, and developers still struggle with it after years of practise, or
-		have rewritten (even if not optimized) a layer on top of repository to avoid dealing with it
+	<li>entity state (attached, detached, etc.) is still a problem for newcomers, and developers still struggle with it after years of practice, or
+		have rewritten (even if not optimized) a layer on top of repositories to avoid dealing with it
 	</li>
-	<li>then come the well-known and common exceptions LazyInitializationException, StaleStateObjectException, &hellip;</li>
+	<li>then come the well-known and common exceptions <code>LazyInitializationException</code>, <code>StaleStateObjectException</code>, &hellip;</li>
 </ul>
 <section class="hint info">
 	<header>Some particular words about @Annotations usage impact</header>
 	By using annotations for mapping, we lack a non-intrusive way of declaring it (HBM/XML is still possible but not officially well maintained), for
 	example :
 	<ul>
-		<li>in a Domain Driven Design project, where Domain must be framework-agnostic, annotations are a problem. To overcome this problem a copy of
-			Domain entities can be introduced in persistence module to get a Persistence Domain, helped by a one-one mapper, this introduces duplicates
+		<li>in a Domain Driven Design project, where Domain must be framework-agnostic, annotations are a problem. To overcome this problem, a copy of
+			Domain entities can be introduced in the persistence module to get a Persistence Domain, helped by a one-one mapper, this introduces duplicates
 			and boilerplate code. Worth mentioning that bidirectionality between some entity can be quite complex to solve by the mapper.
 		</li>
-		<li>quickly persisting some data coming from a Controller is not possible before mapping them to entity, which will produce boilerplate code or
+		<li>quickly persisting some data coming from a Controller is not possible before mapping them to an entity, which will produce boilerplate code or
 			reflection overhead.
 		</li>
 		<li>as long as your project rises in features, and produces relations between entities, the trend brings to obtain a huge entity graph if no one
@@ -80,8 +80,15 @@ Moreover, it comes with the observation that teams hardly master the framework e
 		concatenate unprotected sources</em>.</p>
 <section class="hint danger">
 <header>Known limitations</header>
+Stalactite is tested against :
 <ul>
-	<li>Stalactite is tested against HSQLDB, H2, PostgreSQL, MySQL, MariaDB and Derby</li>
-	<li>For now Stalactite doesn't support Spring derived queries.</li>
+	<li>Oracle (since 3.0.0)</li>
+	<li>PostgreSQL</li>
+	<li>MySQL</li>
+	<li>MariaDB</li>
+	<li>H2</li>
+	<li>SQLite (since 3.0.0)</li>
+	<li>HSQLDB</li>
+	<li>Derby</li>
 </ul>
 </section>

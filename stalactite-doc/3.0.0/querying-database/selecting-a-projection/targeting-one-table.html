@@ -1,22 +1,23 @@
-<h2 id="targeting-one-table">Targeting one table</h2>
-<h3 id="quickly-building-a-bean-from-one-table">Quickly building a bean from one Table</h3>
-<p>For simple case of building a bean from only one table, Stalactite provides the <code>PersistenceContext.select(..)</code> convenient method :</p>
+<h2 id="targeting-one-table">Targeting a single table</h2>
+<h3 id="quickly-building-a-bean-from-one-table">Quickly building a bean from a single Table</h3>
+<p>For basic cases of building a bean from only one table, Stalactite provides the <code>PersistenceContext.select(..)</code> convenient methods :</p>
 <ul>
 	<li>the first argument is your bean factory (constructor or any factory method)</li>
-	<li>other arguments are columns to be appended to the select clause (they are expected to be from same table, no join will be performed).</li>
+	<li>other arguments are the columns to be appended to the select clause (they are expected to be from the same table, no join will be performed).</li>
 </ul>
-<p>The factory (usually your bean constructor) will be given column values, hence its parameters must match <code>Column</code>s Java types. Here is a
-	basic example :</p>
+<p>The factory (usually your bean constructor) will be given the column values, hence its parameters must match the
+    <code>Column</code>s Java types. Here is a basic example :</p>
 <pre><code class="language-java">// Supposing a MyBean class with a one-arg constructor
 Table myTable = new Table(&quot;MyTable&quot;);
 Column&lt;Table, Long&gt; idColumn = myTable.addColumn(&quot;id&quot;, long.class);
 List&lt;MyBean&gt; myBeans = persistenceContext.select(MyBean::new, idColumn);
 </code></pre>
 <section class="hint info">
-	<p>Note that one bean per row will be created : at this stage no bean graph will be built. </p>
+	<p>Note that one bean per row will be created: the <code>PersistenceContext.select(..)</code> doesn't allow creating
+        a bean graph. If needed, you should refer to the <code>PersistenceContext.newQuery(..)</code> method.</p>
 </section>
-<p>Of course, if your bean has a constructor with several arguments, some variations of the <code>select(..)</code> method exist with extra <code>Column</code>
-	argument up to 3</p>
+<p>Of course, if your bean has a constructor with several arguments, some variations of the <code>select(..)</code>
+    method exist with some extra <code>Column</code> argument, up to 3:</p>
 <pre><code class="language-java">// Supposing a Person class with a 3-args constructor
 Table personTable = new Table(&quot;Person&quot;);
 Column&lt;Table, Long&gt; idColumn = personTable.addColumn(&quot;id&quot;, long.class);
@@ -25,8 +26,8 @@ Column&lt;Table, Integer&gt; ageColumn = personTable.addColumn(&quot;age&quot;, 
 List&lt;Person&gt; persons = persistenceContext.select(Person::new, idColumn, nameColumn, ageColumn);
 </code></pre>
 <h3 id="filling-beans-outside-of-constructor">Filling beans outside of constructor</h3>
-<p>Some methods whose signatures are close to above ones are available with an extra parameter that allows bean properties fulfillment outside of
-	constructor : an extra Consumer argument lets you add Columns and consume them. Here is an example :</p>
+<p>Some methods whose signatures are close to the above ones are available with an extra parameter that allows bean
+    properties fulfillment outside of constructor: an extra Consumer argument lets you add Columns and consume them. Here is an example :</p>
 <pre><code class="language-java">// Supposing a Person class with a 1-arg constructor and 2 properties 'name' and 'age' with their respective setter
 Table personTable = new Table(&quot;Person&quot;);
 Column&lt;Table, Long&gt; idColumn = personTable.addColumn(&quot;id&quot;, long.class);
@@ -39,9 +40,10 @@ List&lt;Person&gt; persons = persistenceContext.select(Person::new,
                                                       .add(ageColumn, Person::setAge));
 </code></pre>
 <h3 id="filtering-query">Filtering query</h3>
-<p>Possibility to filter table is available as an extra <code>Consumer</code> of <code>CriteriaChain</code> that allows you to chain and / or criteria
-	that will be appended to SQL where clause. Please note that columns should still be the one of same table and select clause (else it would
-	generate an SQL targeting several tables without joining them), as <code>select(..)</code> method focuses on that use case.</p>
+<p>The possibility to filter the table is available as an extra argument: one can configure a <code>CriteriaChain</code>
+    with some criteria that will be appended to SQL where clause. Please note that the columns should still be one
+    of the <code>from clause</code> table (else it would generate an SQL targeting several tables without joining them),
+    as <code>select(..)</code> method focuses on that use case.</p>
 <pre><code class="language-java">// Supposing a Person class with a 1-arg constructor and 2 properties 'name' and 'age' with their respective setter
 Table personTable = new Table(&quot;Person&quot;);
 Column&lt;Table, Long&gt; idColumn = personTable.addColumn(&quot;id&quot;, long.class);

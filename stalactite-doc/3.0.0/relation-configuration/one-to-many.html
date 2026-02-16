@@ -1,37 +1,35 @@
 <h2 id="one-to-many">One-to-many</h2>
-Please note that as a difference with version 1.0.0, Stalactite 2.0.0 no more distinguishes Set from List while mapping collections.
 <p>Mapping a one-to-many relation can be done through the method <code>mapOneToMany(..)</code> and it requires a mapping configuration for the target related entity.</p>
 
 <pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
-    .mapKey(Country::getId, IdentifierPolicy.afterInsert())
+    .mapKey(Country::getId, IdentifierPolicy.databaseAutoIncrement())
     .map(Country::getName)
     .mapOneToMany(Country::getCities, MappingEase.entityBuilder(City.class, Long.class)
-        .mapKey(City::getId, IdentifierPolicy.afterInsert())
+        .mapKey(City::getId, IdentifierPolicy.databaseAutoIncrement())
         .map(City::getName))
 </code></pre>
-<p>If your relation is owned by reverse side, then you&rsquo;ll find how to declare it hereafter.</p>
 
-<h3 id="declaring-property-owned-by-reverse-side">Declaring property owned by reverse side</h3>
-<p> one may want to declare it as owned by reverse side. This can be done with same method as
+<h3 id="one-to-many-declaring-property-owned-by-reverse-side">Declaring property owned by reverse side</h3>
+<p>You may want to declare it as owned by reverse side. This can be done with same method as
 	the one for one-to-one relation : <code>mappedBy(..)</code></p>
 <pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
-    .mapKey(Country::getId, IdentifierPolicy.afterInsert())
+    .mapKey(Country::getId, IdentifierPolicy.databaseAutoIncrement())
     .map(Country::getName)
     .mapOneToMany(Country::getCities, MappingEase.entityBuilder(City.class, Long.class)
-        .mapKey(City::getId, IdentifierPolicy.afterInsert())
+        .mapKey(City::getId, IdentifierPolicy.databaseAutoIncrement())
         .map(City::getName))
     .mappedBy(City::getCountry)
 </code></pre>
 
-<h3 id="without-bidirectional-relation">Without bidirectional relation</h3>
+<h3 id="one-to-many-without-bidirectional-relation">Without bidirectional relation</h3>
 <p>If you don&rsquo;t need bidirectionality, one may use the <code>mappedBy(..)</code> method with a <code>Column</code> parameter.</p>
 <pre><code class="language-java">Table cityTable = new Table(&quot;City&quot;);
 Column&lt;Table, Country&gt; cityCountryPointer = cityTable.addColumn(&quot;countryId&quot;, Country.class);
 MappingEase.entityBuilder(Country.class, Long.class)
-    .mapKey(Country::getId, IdentifierPolicy.afterInsert())
+    .mapKey(Country::getId, IdentifierPolicy.databaseAutoIncrement())
     .map(Country::getName)
     .mapOneToMany(Country::getCities, MappingEase.entityBuilder(City.class, Long.class)
-        .mapKey(City::getId, IdentifierPolicy.afterInsert())
+        .mapKey(City::getId, IdentifierPolicy.databaseAutoIncrement())
         .map(City::getName))
     .mappedBy(cityCountryPointer)
 </code></pre>

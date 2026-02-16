@@ -2,15 +2,15 @@
 <p>Building your mapping through <code>MappingEase.entityBuilder(..).build(persistenceContext)</code> let&rsquo;s you get an
 	<code>EntityPersister</code> which then allows one to apply usual commands on your entities : </p>
 <ul>
-	<li><code>EntityPersister.insert(entity)</code> will insert given entity with an insert order</li>
-	<li><code>EntityPersister.update(entity)</code> will update given entity with an update order after having loaded it from database in order to
-		compute differences between it and given one. It takes optimistic locking into account
+	<li><code>EntityPersister.insert(entity)</code> will insert the given entity with an insert order</li>
+	<li><code>EntityPersister.update(entity)</code> will update the given entity with an update order after having loaded it from the database to
+		compute differences between it and the given one. It takes optimistic locking into account
 	</li>
-	<li><code>EntityPersister.persist(entity)</code> will insert or update given entity according to its persistence state, which is based on entity
-		id and depends on id policy. Please note that in case of necessary update, entity will be loaded from database since it is delegated to <code>update(entity)</code>
+	<li><code>EntityPersister.persist(entity)</code> will insert or update the given entity according to its persistence state, which is based on entity
+		id and depends on id policy. Please note that to perform the update, the entity is loaded from the database since it is delegated to <code>update(entity)</code>
 	</li>
-	<li><code>EntityPersister.delete(entity)</code> will delete given entity with a delete order. It takes optimistic locking into account</li>
-	<li><code>EntityPersister.select(id)</code> will load a whole entity graph with a select order, or several of them if graph is too complex to be
+	<li><code>EntityPersister.delete(entity)</code> will delete the given entity with a delete order. It takes optimistic locking into account</li>
+	<li><code>EntityPersister.select(id)</code> will load a whole entity graph with a select order, or several of them if the graph is too complex to be
 		loaded through a single select with join (polymorphism may be a good reason)
 	</li>
 </ul>
@@ -23,17 +23,17 @@
 <ul>
 	<li><code>EntityPersister.update(entity, allColumnStatement)</code> allows you to decide weither or not all columns will be contained in SQL
 		order, if not (second argument set to<code>false</code>), only modified columns will be present in SQL. Be aware that using it as such may
-		have performance impact since JDBC batch will have poor change to be activated while updating multiple entities, unless their modifications
-		target same properties. This option is applied to all entity graph.
+		have some performance impact since JDBC batch will have few chances to be activated while updating multiple entities, unless their modifications
+		target the same properties. This option is propagated to all graph entities.
 	</li>
-	<li><code>EntityPersister.update(id, entityConsumer)</code> loads entity according to its id, then apply given Consumer on it, and updates the
-		result. Its a shortcut for who wants to apply some modifications on an entity without having to explicitly load it. Hence this can be seen as
-		a helper for the Command Pattern where whole entity may not be given by the Command, but only properties that must be modified.
+	<li><code>EntityPersister.update(id, entityConsumer)</code> loads entity according to its id, then applies the given Consumer on it and updates the
+		result. It's a shortcut for those who want to apply some modifications on an entity without having to explicitly load it. Hence, this can be seen as
+		a helper for the Command Pattern where the whole entity may not be given by the Command, but only properties that must be modified.
 	</li>
-	<li><code>EntityPersister.updateById(id)</code> will update given entity with an update order on its primary key. As a difference with <code>update(entity)</code>
+	<li><code>EntityPersister.updateById(id)</code> will update the given entity with an update order on its primary key. As a difference with <code>update(entity)</code>
 		it doesn&rsquo;t take optimistic lock into account
 	</li>
-	<li><code>EntityPersister.deleteById(id)</code> will delete given entity with a delete order on its primary key. As a difference with <code>delete(entity)</code>
+	<li><code>EntityPersister.deleteById(id)</code> will delete the given entity with a delete order on its primary key. As a difference with <code>delete(entity)</code>
 		it doesn&rsquo;t take optimistic lock into account
 	</li>
 </ul>

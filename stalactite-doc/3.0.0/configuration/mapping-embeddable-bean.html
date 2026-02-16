@@ -1,10 +1,9 @@
 <h2 id="mapping-embeddable-bean">Mapping embeddable bean</h2>
-<p>Embedding beans follows the same principle as properties or enums, the method to use on a configuration is <code>embed(..)</code>.</p>
+<p>Embedding beans follows the same principle as properties or enums, they are declarable thanks to the <code>embed(..)</code> method.</p>
 <p>Supposing that a <code>Country</code> has a <code>Timestamp</code> which itself as a <code>modificationDate</code> and a <code>creationDate</code>
-	that you want to persist into the same database table than the <code>Country</code> entity, then you have to embed the <code>Timestamp</code>
-	(complex type) into the <code>Country</code> entity in such the following way :</p>
+	that you want to persist into the same database table as the <code>Country</code> entity, then you have to embed the <code>Timestamp</code>
+	(complex type) into the <code>Country</code> entity through the following way :</p>
 <pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
-    .mapKey(Country::getId, IdentifierPolicy.afterInsert())
     .embed(Country::getTimestamp, MappingEase.embeddableBuilder(Timestamp.class)
 		.map(Timestamp::getCreationDate)
 		.map(Timestamp::getModificationDate))
@@ -13,18 +12,16 @@
 <p>Sometimes embedded bean property names don&rsquo;t match column ones, this requires to indicate column name that the property must fall into. This
 	can be done by using the method <code>overrideName(..)</code> after declaring the embedded property :</p>
 <pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
-    .mapKey(Country::getId, IdentifierPolicy.afterInsert())
     .embed(Country::getTimestamp, MappingEase.embeddableBuilder(Timestamp.class)
 		.map(Timestamp::getCreationDate)
 		.map(Timestamp::getModificationDate))
         .overrideName(Timestamp::getCreationDate, &quot;creation_date&quot;)
 </code></pre>
 <h3 id="excluding-properties-from-embedding">Excluding properties from embedding</h3>
-<p>By default all target entity properties (please be aware of the note above : word &ldquo;properties&rdquo; may be misused) are candidates for being
-	persisted, this may not be wanted and some properties should be removed from persistence. For such case one could use the <code>exclude(..)</code>
+<p>By default, all the defined target bean properties (please be aware of the note above: word &ldquo;properties&rdquo; may be misused) are candidates for being
+	persisted. However, sometimes, it is necessary to remove some of them from the persistence. In such case, you could use the <code>exclude(..)</code>
 	method :</p>
 <pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
-    .mapKey(Country::getId, IdentifierPolicy.afterInsert())
     .embed(Country::getTimestamp, MappingEase.embeddableBuilder(Timestamp.class)
 		.map(Timestamp::getCreationDate)
 		.map(Timestamp::getModificationDate))
@@ -35,15 +32,14 @@
 </section>
 
 <h3 id="embedding-of-embedding">Embedding of embedding</h3>
-<p>In some cases one may need to embed a bean of an already-embedded bean, then you should use the <code>embed(..)</code> method as in this
+<p>In some cases, one may need to embed a bean of an already-embedded bean, then you should use the <code>embed(..)</code> method as in this
 	(totally fake) example where president modification date is used as the election date stored in the country table :</p>
 <pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
-    .mapKey(Country::getId, IdentifierPolicy.afterInsert())
     .embed(Country::getPresident, MappingEase.embeddableBuilder(Person.class)
 		.map(Person::getId)
 		.map(Person::getName)
 		.embed(Person::getTimestamp, MappingEase.embeddableBuilder(Timestamp.class)
 			.map(Timestamp::getCreationDate)
 			.map(Timestamp::getModificationDate))
-			.overrideName(Timestamp::getModificationDate, &quot;presidentElectedAt&quot;)
+			.overrideName(Timestamp::getModificationDate, &quot;presidentElectedAt&quot;))
 </code></pre>
