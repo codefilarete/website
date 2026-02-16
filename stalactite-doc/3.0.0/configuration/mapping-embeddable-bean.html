@@ -27,9 +27,6 @@
 		.map(Timestamp::getModificationDate))
         .exclude(Timestamp::getCreationDate)
 </code></pre>
-<section class="hint success">
-<p>Be aware that candidates are computed from getter and setter methods (following Java Bean Naming convention), not from instance fields.</p>
-</section>
 
 <h3 id="embedding-of-embedding">Embedding of embedding</h3>
 <p>In some cases, one may need to embed a bean of an already-embedded bean, then you should use the <code>embed(..)</code> method as in this
