@@ -6,7 +6,7 @@
 <pre><code class="language-java">DataSource dataSource = ... // create one from whatever manner
 PersistenceContext persistenceContext = new PersistenceContext(new DataSourceConnectionProvider(dataSource), MySQLDialectBuilder.defaultMySQLDialect());
 
-EntityPersister&lt;Country, Long&gt; countryPersister = MappingEase.entityBuilder(Country.class, Long.class)
+EntityPersister&lt;Country, Long&gt; countryPersister = FluentMappings.entityBuilder(Country.class, Long.class)
     .mapKey(Country::getId, IdentifierPolicy.afterInsert())
     .map(Country::getName)
     .build(persistenceContext);

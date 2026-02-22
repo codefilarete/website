@@ -16,7 +16,7 @@
     expect a <code>PersistenceContext</code> as argument, which is necessary to build the persister:</p>
 <pre><code class="language-java">@Bean
 public EntityPersister&lt;Person, Identifier&lt;Long&gt;&gt; personPersister(PersistenceContext persistenceContext) {
-    return MappingEase.entityBuilder(Person.class, long.class)
+    return FluentMappings.entityBuilder(Person.class, long.class)
             .mapKey(Person::getId, IdentifierPolicy.afterInsert())
             .map(Person::getName)
             .build(persistenceContext);

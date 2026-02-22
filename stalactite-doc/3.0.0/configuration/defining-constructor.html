@@ -9,7 +9,7 @@
     Here is a basic example to make Stalactite use the one-arg <code>Country</code> constructor and takes its
     id as argument:
 </p>
-<pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
+<pre><code class="language-java">FluentMappings.entityBuilder(Country.class, Long.class)
     .mapKey(Country::getId, IdentifierPolicy.databaseAutoIncrement())
     .usingConstructor(Country::new, "id")
 </code></pre>
@@ -28,7 +28,7 @@
 Column&lt;Table, Long&gt; idColumn = countryTable.addColumn("id", long.class).primaryKey();
 Column&lt;Table, String&gt; nameColumn = countryTable.addColumn("name", String.class);
 
-MappingEase.entityBuilder(Country.class, Long.class)
+FluentMappings.entityBuilder(Country.class, Long.class)
     .mapKey(Country::getId, IdentifierPolicy.databaseAutoIncrement())
     .map(Country::getName)
     .usingFactory(row -> new Country(row.apply(idColumn), row.apply(nameColumn)))
@@ -45,7 +45,7 @@ MappingEase.entityBuilder(Country.class, Long.class)
 Column&lt;Table, Long&gt; idColumn = countryTable.addColumn("id", long.class).primaryKey();
 Column&lt;Table, String&gt; nameColumn = countryTable.addColumn("name", String.class);
 
-MappingEase.entityBuilder(Country.class, Long.class)
+FluentMappings.entityBuilder(Country.class, Long.class)
     .mapKey(Country::getId, IdentifierPolicy.databaseAutoIncrement()).setByConstructor()
     .usingFactory(row -> new Country(row.apply(idColumn), row.apply(nameColumn)))
     .map(Country::getName).setByConstructor()

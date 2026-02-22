@@ -3,16 +3,16 @@
 <p>By default, cascade policy is <code>ALL</code> (which means that unsaved target instance is saved when root is saved,
 	but not deleted when root is deleted), this behavior can be changed with the <code>cascading(..)</code> method :
 </p>
-<pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
+<pre><code class="language-java">FluentMappings.entityBuilder(Country.class, Long.class)
     .mapKey(Country::getId, IdentifierPolicy.databaseAutoIncrement())
     .map(Country::getName)
-    .mapOneToMany(Country::getCities, MappingEase.entityBuilder(City.class, Long.class)
+    .mapOneToMany(Country::getCities, FluentMappings.entityBuilder(City.class, Long.class)
         .mapKey(City::getId, IdentifierPolicy.databaseAutoIncrement())
         .map(City::getName))
     .cascading(CascadeOptions.RelationMode.READ_ONLY)
 </code></pre>
 
-<pre><code class="language-java">MappingEase.entityBuilder(Answer.class, Long.class)
+<pre><code class="language-java">FluentMappings.entityBuilder(Answer.class, Long.class)
     .mapKey(Answer::getId, IdentifierPolicy.databaseAutoIncrement())
     .mapManyToMany(Answer::getChoices, entityBuilder(Choice.class, Long.class)
         .mapKey(Choice::getId, IdentifierPolicy.databaseAutoIncrement())
@@ -35,16 +35,16 @@
 	separately, out of the main query that joins the whole entity graph. To do such secondary loading, you should call
 	<code>fetchSeparately()</code> on your relation configuration.</p>
 
-<pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
+<pre><code class="language-java">FluentMappings.entityBuilder(Country.class, Long.class)
     .mapKey(Country::getId, IdentifierPolicy.databaseAutoIncrement())
     .map(Country::getName)
-    .mapOneToMany(Country::getCities, MappingEase.entityBuilder(City.class, Long.class)
+    .mapOneToMany(Country::getCities, FluentMappings.entityBuilder(City.class, Long.class)
         .mapKey(City::getId, IdentifierPolicy.databaseAutoIncrement())
         .map(City::getName))
         .fetchSeparately()
 </code></pre>
 
-<pre><code class="language-java">MappingEase.entityBuilder(Answer.class, Long.class)
+<pre><code class="language-java">FluentMappings.entityBuilder(Answer.class, Long.class)
     .mapKey(Answer::getId, IdentifierPolicy.databaseAutoIncrement())
     .mapManyToMany(Answer::getChoices, entityBuilder(Choice.class, Long.class)
         .mapKey(Choice::getId, IdentifierPolicy.databaseAutoIncrement())
@@ -59,16 +59,16 @@
     <code>indexedBy(String)</code> which let you define the column name as an argument.</p>
 
 
-<pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
+<pre><code class="language-java">FluentMappings.entityBuilder(Country.class, Long.class)
     .mapKey(Country::getId, IdentifierPolicy.databaseAutoIncrement())
     .map(Country::getName)
-    .mapOneToMany(Country::getBiggestCities, MappingEase.entityBuilder(City.class, Long.class)
+    .mapOneToMany(Country::getBiggestCities, FluentMappings.entityBuilder(City.class, Long.class)
         .mapKey(City::getId, IdentifierPolicy.databaseAutoIncrement())
         .map(City::getName))
         .indexed()
 </code></pre>
 
-<pre><code class="language-java">MappingEase.entityBuilder(Answer.class, Long.class)
+<pre><code class="language-java">FluentMappings.entityBuilder(Answer.class, Long.class)
     .mapKey(Answer::getId, IdentifierPolicy.databaseAutoIncrement())
     .mapManyToMany(Answer::getChoices, entityBuilder(Choice.class, Long.class)
         .mapKey(Choice::getId, IdentifierPolicy.databaseAutoIncrement())
@@ -111,16 +111,16 @@
 <p>This behavior can be adapted : you can manage the exact type of your instantiated <code>Collection</code> by using the method <code>initializeWith(..)</code>.
 Hereafter is an example of using a Set that sorts Cities by their name :</p>
 
-<pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
+<pre><code class="language-java">FluentMappings.entityBuilder(Country.class, Long.class)
     .mapKey(Country::getId, IdentifierPolicy.databaseAutoIncrement())
     .map(Country::getName)
-    .mapOneToMany(Country::getBiggestCities, MappingEase.entityBuilder(City.class, Long.class)
+    .mapOneToMany(Country::getBiggestCities, FluentMappings.entityBuilder(City.class, Long.class)
         .mapKey(City::getId, IdentifierPolicy.databaseAutoIncrement())
         .map(City::getName))
         .initializeWith( () -> new TreeSet<>(Comparator.comparing(City::getName)))
 </code></pre>
 
-<pre><code class="language-java">MappingEase.entityBuilder(Answer.class, Long.class)
+<pre><code class="language-java">FluentMappings.entityBuilder(Answer.class, Long.class)
     .mapKey(Answer::getId, IdentifierPolicy.databaseAutoIncrement())
     .mapManyToMany(Answer::getChoices, entityBuilder(Choice.class, Long.class)
         .mapKey(Choice::getId, IdentifierPolicy.databaseAutoIncrement())

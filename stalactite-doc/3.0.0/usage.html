@@ -1,10 +1,10 @@
-<p>The entry point to use Stalactite from the <code>orm</code> module is the <code>MappingEase.entityBuilder(..)</code> method which helps one to build an <code>EntityPersister</code> : it is the object that let one insert, update, delete or select an entity and its graph.</p>
+<p>The entry point to use Stalactite from the <code>orm</code> module is the <code>FluentMappings.entityBuilder(..)</code> method which helps one to build an <code>EntityPersister</code> : it is the object that let one insert, update, delete or select an entity and its graph.</p>
 <p>To build a <code>Persister</code>, a <code>PersistenceContext</code> is necessary : it contains database oriented informations such as a JDBC<code>Connection</code> provider and a <code>Dialect</code>.</p>
 <p>Here is an example:</p>
 <pre><code class="language-java">DataSource dataSource = ... // create one from whatever manner
 PersistenceContext persistenceContext = new PersistenceContext(dataSource);
 
-EntityPersister&lt;Country, Long&gt; countryPersister = MappingEase.entityBuilder(Country.class, Long.class)
+EntityPersister&lt;Country, Long&gt; countryPersister = FluentMappings.entityBuilder(Country.class, Long.class)
     .mapKey(Country::getId, IdentifierPolicy.databaseAutoIncrement())
     .map(Country::getName)
     // ... configuration is explained in next chapters

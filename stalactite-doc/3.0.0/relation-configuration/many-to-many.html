@@ -3,7 +3,7 @@
 	mapping configuration for the target related entity. In the example below we consider a multiple-choice question
 	and want to store its answers : an answer can have multiple choices, each choice can be referenced by multiple answers :</p>
 
-<pre><code class="language-java">MappingEase.entityBuilder(Answer.class, Long.class)
+<pre><code class="language-java">FluentMappings.entityBuilder(Answer.class, Long.class)
     .mapKey(Answer::getId, IdentifierPolicy.databaseAutoIncrement())
     .mapManyToMany(Answer::getChoices, entityBuilder(Choice.class, Long.class)
         .mapKey(Choice::getId, IdentifierPolicy.databaseAutoIncrement())

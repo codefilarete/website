@@ -1,7 +1,7 @@
 <h2 id="mapping-enum">Mapping enum</h2>
 <p>Mapping enum looks very close to simple property mapping, the thing that changes is calling the <code>mapEnum(..)</code> method instead of the
 	<code>map(..)</code> method</p>
-<pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
+<pre><code class="language-java">FluentMappings.entityBuilder(Country.class, Long.class)
     .mapEnum(Country::getLanguage)
 </code></pre>
 <section class="hint info">
@@ -9,13 +9,13 @@
 </section>
 <h3 id="using-ordinal-position-as-persistence-value">Using ordinal position as persistence value</h3>
 <p>if you need to use enum ordinal values, you can specify it with the <code>byOrdinal()</code> method after the <code>mapEnum(..)</code> method :</p>
-<pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
+<pre><code class="language-java">FluentMappings.entityBuilder(Country.class, Long.class)
     .mapEnum(Country::getLanguage).byOrdinal()
 </code></pre>
 <h3 id="ensuring-enum-name-as-persistence-value">Ensuring enum name as persistence value</h3>
 <p>As said before, <em>enum names are used by default, so the following is not necessary</em>, but one may need to specify it. This can be done
 	in the same way as for ordinal value: call <code>byName()</code> after the <code>mapEnum(..)</code> method :</p>
-<pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
+<pre><code class="language-java">FluentMappings.entityBuilder(Country.class, Long.class)
     .mapEnum(Country::getLanguage).byName()
 </code></pre>
 <h3 id="additional-options">Additional options</h3>

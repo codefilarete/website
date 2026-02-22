@@ -2,18 +2,18 @@
 <h3 id="mapping-map-basis">Declaring the Map</h3>
 <p>To map a <code>Map</code> you must use the <code>mapMap(..)</code> method and give it the key element type and the value
     element type.</p>
-<pre><code class="language-java">MappingEase.entityBuilder(Person.class, Long.class)
+<pre><code class="language-java">FluentMappings.entityBuilder(Person.class, Long.class)
     .mapMap(Person::getPhoneNumbers, String.class /* personal, office, mobile, ... */, String.class)
 </code></pre>
 
 <p>If your key element type is complex bean (more than one column) or your value type is complex, then you must describe
 them by chaining the mapping with <code>withKeyMapping(..)</code> or <code>withValueMapping(..)</code> respectively</p>
-<pre><code class="language-java">MappingEase.entityBuilder(Person.class, Long.class)
+<pre><code class="language-java">FluentMappings.entityBuilder(Person.class, Long.class)
     .mapMap(Person::getAddresses, Period.class, Address.class)
-            .withKeyMapping(MappingEase.embeddableBuilder(Period.class)
+            .withKeyMapping(FluentMappings.embeddableBuilder(Period.class)
                     .map(Period::getStartDate)
                     .map(Period::getEndDate))
-            .withValueMapping(MappingEase.embeddableBuilder(Address.class)
+            .withValueMapping(FluentMappings.embeddableBuilder(Address.class)
                     .map(Address::getStreet)
                     .map(Address::getZipCode)
                     .map(Address::getCity))
@@ -22,8 +22,8 @@ them by chaining the mapping with <code>withKeyMapping(..)</code> or <code>withV
 <p><section class="hint success">
     <p>Stalactite supports the storage of entities as key or value in <code>Map</code>s. You simply have to use the
     <code>withKeyMapping(..)</code> or <code>withValueMapping(..)</code> and give them an entity or embeddable
-    persistence configuration through the <code>MappingEase.entityBuilder(..)</code> or
-    <code>MappingEase.embeddableBuilder(..)</code> methods.</p>
+    persistence configuration through the <code>FluentMappings.entityBuilder(..)</code> or
+    <code>FluentMappings.embeddableBuilder(..)</code> methods.</p>
 </section>
 
 <h3 id="mapping-map-initialization">Map initialization</h3>
@@ -32,7 +32,7 @@ them by chaining the mapping with <code>withKeyMapping(..)</code> or <code>withV
     <code>HashMap</code> for <code>List</code>).
     You can override this by providing a custom factory using <code>initializeWith(..)</code>.
 </p>
-<pre><code class="language-java">MappingEase.entityBuilder(Person.class, Long.class)
+<pre><code class="language-java">FluentMappings.entityBuilder(Person.class, Long.class)
     .mapMap(Person::getAddresses, LocalDate.class, String.class)
 	.initializeWith(() -> new TreeMap<>(Comparator.reverseOrder()));
 </code></pre>
@@ -52,7 +52,7 @@ them by chaining the mapping with <code>withKeyMapping(..)</code> or <code>withV
     <li><code>valueSize(Size)</code>: specifies the <code>Size</code> of the column storing the Map value.</li>
 </ul>
 
-<pre><code class="language-java">MappingEase.entityBuilder(Person.class, Long.class)
+<pre><code class="language-java">FluentMappings.entityBuilder(Person.class, Long.class)
     .mapMap(Person::getPhoneNumbers, String.class /* personal, office, mobile, ... */, String.class)
     .onTable("PHONES")
     .reverseJoinColumn("person_id")

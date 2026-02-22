@@ -2,7 +2,7 @@
 <section class="hint info">
 <p>The following explanations will use an example of a query created through a simple <code>String</code>s, please note
     that all methods mentioned below also exist with a signature accepting a <code>Query</code> object which can be
-    build thanks to a fluent API starting with<code>QueryEase.select(..)</code>. </p>
+    build thanks to a fluent API starting with<code>FluentQueries.select(..)</code>. </p>
 </section>
 
 <h4 id="from-an-sql-statement">From an SQL statement</h4>
@@ -102,7 +102,7 @@ persistenceContext.newQuery(&quot;select id, name, isoCode from Country&quot;, C
 <p>Moreover, you can combine it with the select fluent API to obtain a refactor-proof query :</p>
 <pre><code class="language-java">// The CountryTable class exposes its columns through instance fields
 CountryTable countryTable = new CountryTable();
-persistenceContext.newQuery(QueryEase.select(countryTable.id, countryTable.name, countryTable.isoCode).from(countryTable), Country.class)
+persistenceContext.newQuery(FluentQueries.select(countryTable.id, countryTable.name, countryTable.isoCode).from(countryTable), Country.class)
     .mapKey(Country::new , countryTable.id)
     .map(countryTable.name, Country::setName)
     .map(countryTable.isoCode, Country::setIsoCode)

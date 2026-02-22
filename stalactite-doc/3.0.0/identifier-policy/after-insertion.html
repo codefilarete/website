@@ -1,7 +1,7 @@
 <h2 id="after-insertion">After insertion</h2>
 <p>This identifier policy uses database-generated id through auto-increment column. This policy only works with integer numbers such as
 	<code>Long</code> or <code>Integer</code>.</p>
-<pre><code class="language-java">MappingEase.entityBuilder(Car.class, long.class)
+<pre><code class="language-java">FluentMappings.entityBuilder(Car.class, long.class)
     .mapKey(Country::getId, IdentifierPolicy.databaseAutoIncrement())
     .map(Car::getModel)
 </code></pre>

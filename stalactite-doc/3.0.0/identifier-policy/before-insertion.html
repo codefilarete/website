@@ -9,7 +9,7 @@ There are 2 type of policy before insertion:
 	state of the generator is stored in a database table (one line per entity class) and pooled in memory to avoid
 	too many back and forth with it. <code>PooledHighLowSequence</code>only generates <code>long</code>values.</p>
 <p>Here is a default example :</p>
-<pre><code class="language-java">MappingEase.entityBuilder(Car.class, long.class)
+<pre><code class="language-java">FluentMappings.entityBuilder(Car.class, long.class)
     .mapKey(Car::getId, IdentifierPolicy.pooledHiLoSequence())
     .map(Car::getModel)
 </code></pre>
@@ -22,7 +22,7 @@ There are 2 type of policy before insertion:
 	new TransactionalConnectionProvider(dataSource),
 	persistenceContext.getJDBCBatchSize());
 
-MappingEase.entityBuilder(Car.class, long.class)
+FluentMappings.entityBuilder(Car.class, long.class)
     .mapKey(Car::getId, IdentifierPolicy.pooledHiLoSequence(longSequence))
     .map(Car::getModel)
 </code></pre>
@@ -30,12 +30,12 @@ MappingEase.entityBuilder(Car.class, long.class)
 <h3 id="before-insertion-database-sequence">Database sequence</h3>
 <p>This policy defines a database sequence that Stalactite will ask for the next identifier, and only generates <code>long</code>
 	values.</p>
-<pre><code class="language-java">MappingEase.entityBuilder(Car.class, long.class)
+<pre><code class="language-java">FluentMappings.entityBuilder(Car.class, long.class)
 	.mapKey(Car::getId, IdentifierPolicy.databaseSequence())
 	.map(Car::getModel)
 </code></pre>
 <p>As for other features, some options are available when using a slightly different signature</p>
-<pre><code class="language-java">MappingEase.entityBuilder(Car.class, long.class)
+<pre><code class="language-java">FluentMappings.entityBuilder(Car.class, long.class)
 	// &quot;mySequence&quot; is the sequence name, 42 is the initial sequence value, and 100 is the pool size
 	.mapKey(Car::getId, IdentifierPolicy.databaseSequence("mySequence", new DatabaseSequenceSettings(42, 100))
 	.map(Car::getModel)

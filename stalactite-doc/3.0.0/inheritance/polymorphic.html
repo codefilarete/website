@@ -7,15 +7,15 @@
 <h3 id="persisting-all-siblings-in-same-table--single-table">Persisting all siblings in the same table : single-table</h3>
 <p>Single-table policy is available from <code>PolymorphismPolicy.singleTable()</code> method, on which one must chain
     <code>addSubClass(..)</code> for each subtype to be managed by persister. This method takes a sub-entity
-    configuration as argument, which is available through <code>MappingEase.subentityBuilder(..)</code>, as well as a
+    configuration as argument, which is available through <code>FluentMappings.subentityBuilder(..)</code>, as well as a
     discriminator value that allows to distinguish the instance type from its siblings. Hereafter is an example: </p>
-<pre><code class="language-java">EntityPersister&lt;AbstractVehicle, Long&gt; abstractVehiclePersister = MappingEase.entityBuilder(AbstractVehicle.class, Long.class)
+<pre><code class="language-java">EntityPersister&lt;AbstractVehicle, Long&gt; abstractVehiclePersister = FluentMappings.entityBuilder(AbstractVehicle.class, Long.class)
     .mapKey(AbstractVehicle::getId, IdentifierPolicy.databaseAutoIncrement())
     .map(AbstractVehicle::getColor)
     .mapPolymorphism(PolymorphismPolicy.&lt;AbstractVehicle&gt;singleTable()
-        .addSubClass(MappingEase.subentityBuilder(Car.class)
+        .addSubClass(FluentMappings.subentityBuilder(Car.class)
             .map(Car::getModel), &quot;CAR&quot;)
-        .addSubClass(MappingEase.subentityBuilder(Bus.class)
+        .addSubClass(FluentMappings.subentityBuilder(Bus.class)
             .map(Bus::getCapacity), &quot;BUS&quot;))
     .build(persistenceContext);
 </code></pre>
@@ -23,15 +23,15 @@
 <h3 id="persisting-each-sibling-in-its-dedicated-table--table-per-class">Persisting each sibling in its dedicated table : table-per-class</h3>
 <p>Table-per-class policy is available from <code>PolymorphismPolicy.tablePerClass()</code> method, on which one must
     chain <code>addSubClass(..)</code> for each subtype to be managed by persister. This method takes sub-entity
-    configuration as argument, which is available through <code>MappingEase.subentityBuilder(..)</code>.
+    configuration as argument, which is available through <code>FluentMappings.subentityBuilder(..)</code>.
     Hereafter is an example : </p>
-<pre><code class="language-java">EntityPersister&lt;AbstractVehicle, Long&gt; abstractVehiclePersister = MappingEase.entityBuilder(AbstractVehicle.class, Long.class)
+<pre><code class="language-java">EntityPersister&lt;AbstractVehicle, Long&gt; abstractVehiclePersister = FluentMappings.entityBuilder(AbstractVehicle.class, Long.class)
     .mapKey(AbstractVehicle::getId, IdentifierPolicy.databaseAutoIncrement())
     .map(AbstractVehicle::getColor)
     .mapPolymorphism(PolymorphismPolicy.&lt;AbstractVehicle&gt;tablePerClass()
-        .addSubClass(MappingEase.subentityBuilder(Car.class)
+        .addSubClass(FluentMappings.subentityBuilder(Car.class)
             .map(Car::getModel))
-        .addSubClass(MappingEase.subentityBuilder(Bus.class)
+        .addSubClass(FluentMappings.subentityBuilder(Bus.class)
             .map(Bus::getCapacity)))
     .build(persistenceContext);
 </code></pre>
@@ -39,15 +39,15 @@
 <h3 id="persisting-parent-properties-in-one-table-and-siblings-ones-in-dedicated-ones--join-table">Persisting parent properties in one table and sibling ones in dedicated ones : join-table</h3>
 <p>Join-table policy is available from <code>PolymorphismPolicy.joinTable()</code> method, on which one must chain
     <code>addSubClass(..)</code> for each subtype to be managed by persister. This method takes sub-entity configuration
-    as argument, which is available through <code>MappingEase.subentityBuilder(..)</code>.
+    as argument, which is available through <code>FluentMappings.subentityBuilder(..)</code>.
     Hereafter is an example : </p>
-<pre><code class="language-java">EntityPersister&lt;AbstractVehicle, Long&gt; abstractVehiclePersister = MappingEase.entityBuilder(AbstractVehicle.class, Long.class)
+<pre><code class="language-java">EntityPersister&lt;AbstractVehicle, Long&gt; abstractVehiclePersister = FluentMappings.entityBuilder(AbstractVehicle.class, Long.class)
     .mapKey(AbstractVehicle::getId, IdentifierPolicy.databaseAutoIncrement())
     .map(AbstractVehicle::getColor)
     .mapPolymorphism(PolymorphismPolicy.&lt;AbstractVehicle&gt;joinTable()
-        .addSubClass(MappingEase.subentityBuilder(Car.class)
+        .addSubClass(FluentMappings.subentityBuilder(Car.class)
             .map(Car::getModel))
-        .addSubClass(MappingEase.subentityBuilder(Bus.class)
+        .addSubClass(FluentMappings.subentityBuilder(Bus.class)
             .map(Bus::getCapacity)))
     .build(persistenceContext);
 </code></pre>

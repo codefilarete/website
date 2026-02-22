@@ -2,13 +2,13 @@
 <h3 id="mapping-element-collection-basis">Declaring the collection</h3>
 <p>To map a <code>Collection</code> of elements (not entities) you must use the <code>mapCollection(..)</code> method,
     which takes as second argument the element type.</p>
-<pre><code class="language-java">MappingEase.entityBuilder(Person.class, Long.class)
+<pre><code class="language-java">FluentMappings.entityBuilder(Person.class, Long.class)
     .mapCollection(Person::getNicknames, String.class)
 </code></pre>
 
 <p>If your element type is complex (more than one column) you shall give the bean configuration as a third argument.</p>
-<pre><code class="language-java">MappingEase.entityBuilder(Person.class, Long.class)
-    .mapCollection(Person::getTimestamps, Timestamp.class, MappingEase.embeddableBuilder(Timestamp.class)
+<pre><code class="language-java">FluentMappings.entityBuilder(Person.class, Long.class)
+    .mapCollection(Person::getTimestamps, Timestamp.class, FluentMappings.embeddableBuilder(Timestamp.class)
             .map(Timestamp::getCreationDate)
             .map(Timestamp::getModificationDate))
 </code></pre>
@@ -18,7 +18,7 @@
     By default, Stalactite will choose a default implementation for your collection (e.g., <code>ArrayList</code> for <code>List</code>).
     You can override this by providing a custom factory using <code>initializeWith(..)</code>.
 </p>
-<pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
+<pre><code class="language-java">FluentMappings.entityBuilder(Country.class, Long.class)
     .mapKey(Country::getId, IdentifierPolicy.databaseAutoIncrement())
     .mapCollection(Country::getCities, String.class)
     .initializeWith(HashSet::new)
@@ -37,7 +37,7 @@
     <li><code>elementColumnSize(Size)</code>: specifies the <code>Size</code> of the column storing the collection elements.</li>
 </ul>
 
-<pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
+<pre><code class="language-java">FluentMappings.entityBuilder(Country.class, Long.class)
     .mapKey(Country::getId, IdentifierPolicy.databaseAutoIncrement())
     .mapCollection(Country::getCities, String.class)
     .onTable("COUNTRY_CITY")
@@ -49,7 +49,7 @@
     For ordered collections like <code>List</code>, you might want to preserve the element order in the database.
     Use <code>indexed()</code> to use the default index column name (<code>idx</code>), or <code>indexedBy(String columnName)</code> to specify your own.
 </p>
-<pre><code class="language-java">MappingEase.entityBuilder(Country.class, Long.class)
+<pre><code class="language-java">FluentMappings.entityBuilder(Country.class, Long.class)
     .mapKey(Country::getId, IdentifierPolicy.databaseAutoIncrement())
     .mapCollection(Country::getCities, String.class)
     .indexedBy("order_index")

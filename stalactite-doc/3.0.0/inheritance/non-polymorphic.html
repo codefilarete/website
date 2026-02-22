@@ -17,17 +17,17 @@
 	<code>Car</code>table with all its data, and <code>Truck</code>s will have its own stored in the <code>Truck</code>table, independently. Such a
 	mapping can be defined as this :</p>
 <pre><code class="language-java">FluentEmbeddableMappingBuilder&lt;Vehicle&gt; vehiclePersistenceConfigurer =
-    MappingEase.embeddableBuilder(Vehicle.class)
+    FluentMappings.embeddableBuilder(Vehicle.class)
 	.map(Vehicle::getColor);
 
-MappingEase.entityBuilder(Car.class, Long.class)
+FluentMappings.entityBuilder(Car.class, Long.class)
 	// concrete class defines id
 	.mapKey(AbstractVehicle::getId, IdentifierPolicy.databaseAutoIncrement())
 	.map(Car::getModel)
 	.mapSuperClass(vehiclePersistenceConfigurer)
 	.build(persistenceContext);
 	
-MappingEase.entityBuilder(Truck.class, Long.class)
+FluentMappings.entityBuilder(Truck.class, Long.class)
 	// concrete class defines id
 	.mapKey(Truck::getId, IdentifierPolicy.databaseAutoIncrement())
 	.map(Truck::getEngine)
@@ -39,14 +39,14 @@ MappingEase.entityBuilder(Truck.class, Long.class)
 	is also declared by the <code>mapSuperClass(..)</code>method, but by passing it a entity configuration.</p>
 <p>Here is a simple example where a configuration defines mapped properties of a <code>Vehicle</code> class, as well as
 	its identifier policy, then the <code>Car</code> class can benefit of it.</p>
-<pre><code class="language-java">EntityMappingConfiguration&lt;Vehicle, Long&gt; inheritanceConfiguration = MappingEase
+<pre><code class="language-java">EntityMappingConfiguration&lt;Vehicle, Long&gt; inheritanceConfiguration = FluentMappings
       .entityBuilder(Vehicle.class, Long.class)
       // mapped super class defines id
       .mapKey(AbstractVehicle::getId, IdentifierPolicy.databaseAutoIncrement())
       .map(Vehicle::getColor)
       .getConfiguration();
 
-EntityPersister&lt;Car, Long&gt; carPersister = MappingEase
+EntityPersister&lt;Car, Long&gt; carPersister = FluentMappings
       .entityBuilder(Car.class, Long.class)
       .map(Car::getModel)
       .mapSuperClass(inheritanceConfiguration)
@@ -58,14 +58,14 @@ EntityPersister&lt;Car, Long&gt; carPersister = MappingEase
 	The method has two signatures, one without argument, meaning that the parent table will be named according to
 	the configured table naming strategy, and one of them taking the table on which parent class persistence must be
 	done. Here is the same example as the previous one with this option activated :</p>
-<pre><code class="language-java">EntityMappingConfiguration&lt;Vehicle, Long&gt; inheritanceConfiguration = MappingEase
+<pre><code class="language-java">EntityMappingConfiguration&lt;Vehicle, Long&gt; inheritanceConfiguration = FluentMappings
       .entityBuilder(Vehicle.class, Long.class)
       // mapped super class defines id
       .mapKey(AbstractVehicle::getId, IdentifierPolicy.databaseAutoIncrement())
       .map(Vehicle::getColor)
       .getConfiguration();
 
-EntityPersister&lt;Car, Long&gt; carPersister = MappingEase
+EntityPersister&lt;Car, Long&gt; carPersister = FluentMappings
       .entityBuilder(Car.class, Long.class)
       .map(Car::getModel)
       .mapSuperClass(inheritanceConfiguration)
